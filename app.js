@@ -71,7 +71,20 @@ const translations = {
         { name:'The Complete SQL Bootcamp',                   issuer:'Udemy' },
       ],
     },
-    blog: { section_title:'Blog', subtitle:'Thoughts on data engineering, analytics, and the intersection of operations and data.', coming_soon:'Posts coming soon. Stay tuned.' },
+    blog: {
+      section_title: 'Blog',
+      subtitle: 'Thoughts on data engineering, analytics, and the intersection of operations and data.',
+      read_more: 'Read post →',
+      items: [
+        {
+          title: 'Did You Know You Can Run Your Own ChatGPT on Your PC?',
+          date: 'April 2026',
+          tags: ['AI', 'Open Source', 'LLMs'],
+          summary: 'Running a powerful AI model locally — no internet, no subscription, no one reading your prompts. What open source models are, why it matters, and how to get one running in under 10 minutes.',
+          url: '#',
+        },
+      ],
+    },
     contact: { section_title:'Get in Touch', subtitle:'Interested in working together or just want to talk data? Feel free to reach out.', email_label:'Email', linkedin_label:'LinkedIn', github_label:'GitHub' },
   },
 
@@ -142,7 +155,20 @@ const translations = {
         { name:'The Complete SQL Bootcamp',                   issuer:'Udemy' },
       ],
     },
-    blog: { section_title:'Blog', subtitle:'Reflexiones sobre ingeniería de datos, analítica y la intersección entre operaciones y datos.', coming_soon:'Posts próximamente. ¡Mantente atento!' },
+    blog: {
+      section_title: 'Blog',
+      subtitle: 'Reflexiones sobre ingeniería de datos, analítica y la intersección entre operaciones y datos.',
+      read_more: 'Leer post →',
+      items: [
+        {
+          title: '¿Sabías que podés tener tu propio ChatGPT en tu PC?',
+          date: 'Abril 2026',
+          tags: ['IA', 'Open Source', 'LLMs'],
+          summary: 'Ejecutar un modelo de IA potente en tu propia computadora — sin internet, sin suscripción, sin que nadie lea tus prompts. Qué son los modelos open source, por qué importa y cómo tener uno funcionando en menos de 10 minutos.',
+          url: '#',
+        },
+      ],
+    },
     contact: { section_title:'Contacto', subtitle:'¿Interesado en trabajar juntos o simplemente hablar de datos? No dudes en escribirme.', email_label:'Email', linkedin_label:'LinkedIn', github_label:'GitHub' },
   },
 };
@@ -203,6 +229,7 @@ function renderAll(lang) {
   renderSkills(d.skills);
   renderEducation(d.education);
   renderCertifications(d.certifications);
+  renderBlog(d.blog);
   restartTypewriter(d.hero.roles);
 }
 
@@ -262,6 +289,21 @@ function renderCertifications(certs) {
       <div><div class="cert-name">${cert.name}</div><div class="cert-issuer">${cert.issuer}</div></div>
     </div>`).join('');
   observeNew('.cert-card');
+}
+
+function renderBlog(blog) {
+  const c = $('#blogGrid'); if (!c) return;
+  c.innerHTML = blog.items.map((post, i) => `
+    <div class="blog-card fade-in" style="transition-delay:${i * .1}s">
+      <div class="blog-card-header">
+        <div class="blog-tags">${post.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        <span class="blog-date">${post.date}</span>
+      </div>
+      <h3 class="blog-title">${post.title}</h3>
+      <p class="blog-summary">${post.summary}</p>
+      <a href="${post.url}" class="blog-read-more" ${post.url === '#' ? '' : 'target="_blank" rel="noopener"'}>${blog.read_more}</a>
+    </div>`).join('');
+  observeNew('.blog-card');
 }
 
 // ============================================================

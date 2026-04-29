@@ -352,9 +352,27 @@ ul { list-style: none; }
 /* ============================================================
    Blog
    ============================================================ */
-.blog-coming-soon { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; border: 2px dashed var(--border); border-radius: 16px; text-align: center; color: var(--text-muted); gap: 1rem; background: var(--accent-subtle); }
-.coming-soon-icon { font-size: 3rem; line-height: 1; }
-.blog-coming-soon p { font-size: 1rem; font-weight: 500; }
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.6rem; }
+.blog-card {
+  background: var(--bg-card); border: 1px solid var(--border-sub); border-radius: var(--radius);
+  padding: 1.8rem; display: flex; flex-direction: column; gap: 0.9rem;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s ease, border-color var(--transition), box-shadow var(--transition);
+}
+.blog-card.visible { opacity: 1; transform: translateY(0); }
+.blog-card:hover { border-color: var(--border); box-shadow: var(--shadow-accent); transform: translateY(-4px); }
+.blog-card-header { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.blog-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.blog-date { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+.blog-title { font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.4; margin: 0; }
+.blog-summary { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; flex: 1; }
+.blog-read-more {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.83rem; font-weight: 600; color: var(--accent);
+  transition: color var(--transition), gap var(--transition);
+  align-self: flex-start;
+}
+.blog-read-more:hover { color: var(--accent-light); gap: 0.5rem; }
 
 /* ============================================================
    Contact
