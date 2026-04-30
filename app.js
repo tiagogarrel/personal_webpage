@@ -73,7 +73,7 @@ const translations = {
     },
     blog: {
       section_title: 'Blog',
-      subtitle: 'Thoughts on data engineering, analytics, and the intersection of operations and data.',
+      subtitle: 'Thoughts on tech, data and other stuff.',
       read_more: 'Read post →',
       items: [
         {
@@ -157,7 +157,7 @@ const translations = {
     },
     blog: {
       section_title: 'Blog',
-      subtitle: 'Reflexiones sobre ingeniería de datos, analítica y la intersección entre operaciones y datos.',
+      subtitle: 'Reflexiones sobre tech, datos y otras cosas.',
       read_more: 'Leer post →',
       items: [
         {
