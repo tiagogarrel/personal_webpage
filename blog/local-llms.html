@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Running a powerful AI model locally — no internet, no subscription, no one reading your prompts." />
+  <title>Did You Know You Can Run Your Own ChatGPT on Your PC? — Tiago Garrel</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%238b5cf6'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Inter,system-ui,sans-serif' font-weight='800' font-size='13' fill='white'>TG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .post-container { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+    .post-wrapper   { padding: 120px 0 96px; }
+
+    .post-back {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+      transition: color var(--transition); margin-bottom: 2.8rem;
+    }
+    .post-back:hover { color: var(--accent); }
+    .post-back svg  { transition: transform var(--transition); }
+    .post-back:hover svg { transform: translateX(-3px); }
+
+    .post-meta     { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .post-date     { font-size: 0.82rem; color: var(--text-muted); }
+    .post-dot      { color: var(--border); }
+    .post-read     { font-size: 0.82rem; color: var(--text-muted); }
+
+    .post-title {
+      font-size: clamp(1.75rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 2.4rem;
+    }
+
+    .post-divider { border: none; border-top: 1px solid var(--border-sub); margin: 2.8rem 0; }
+
+    .post-body { color: var(--text-muted); line-height: 1.85; font-size: 1.02rem; }
+    .post-body p  { margin-bottom: 1.4rem; }
+    .post-body h2 {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; margin: 2.8rem 0 1rem;
+    }
+    .post-body h2::before { content: '—  '; color: var(--accent); font-weight: 800; }
+    .post-body strong { color: var(--text); font-weight: 700; }
+    .post-body ul { list-style: none; margin: 1rem 0 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .post-body ul li { padding-left: 1.4rem; position: relative; }
+    .post-body ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.78rem; top: 0.18em; }
+    .post-body code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.88em;
+      background: var(--accent-subtle); color: var(--accent);
+      padding: 0.15em 0.45em; border-radius: 5px; border: 1px solid var(--border);
+    }
+    .post-body table { width: 100%; border-collapse: collapse; margin: 1.4rem 0; font-size: 0.92rem; }
+    .post-body th { text-align: left; padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); border-bottom: 1px solid var(--border); }
+    .post-body td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border-sub); color: var(--text-muted); }
+    .post-body tr:last-child td { border-bottom: none; }
+    .post-body tr:hover td { background: var(--accent-subtle); }
+
+    .post-footer-nav {
+      margin-top: 4rem; padding-top: 2rem;
+      border-top: 1px solid var(--border-sub);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .post-footer-nav a {
+      font-size: 0.88rem; font-weight: 600; color: var(--accent);
+      transition: color var(--transition);
+    }
+    .post-footer-nav a:hover { color: var(--accent-light); }
+
+    /* Nav simplified */
+    .nav-links { display: none; }
+    @media (max-width: 640px) {
+      .post-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo">TG<span class="logo-dot">.</span></a>
+      <div class="nav-controls">
+        <button class="seg-toggle" id="langToggle" aria-label="Toggle language">
+          <span class="seg-opt active" id="langEN">EN</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt" id="langES">ES</span>
+        </button>
+        <button class="seg-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="seg-opt" id="themeLight">☀</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt active" id="themeDark">☾</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="post-wrapper">
+    <div class="post-container">
+
+      <a href="../index.html#blog" class="post-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        <span data-i18n="back">Back to Blog</span>
+      </a>
+
+      <!-- EN CONTENT -->
+      <div id="content-en">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Open Source</span>
+            <span class="tag">LLMs</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">April 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">8 min read</span>
+        </div>
+
+        <h1 class="post-title">Did You Know You Can Run Your Own ChatGPT on Your PC?</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>Most people interact with AI through a browser tab. You type, a server somewhere processes your words, and a response comes back. Simple, convenient — and completely out of your hands. But there's a growing movement of people who've decided they'd rather keep things closer to home. Literally.</p>
+          <p>You can run a powerful AI model on your own computer. No internet required. No subscription. No one reading your prompts.</p>
+
+          <h2>What's Actually Happening When You Use ChatGPT</h2>
+          <p>Before getting into the "how," it helps to understand what these models actually are.</p>
+          <p>ChatGPT, Claude, Gemini — they're all built on top of what are called Large Language Models, or LLMs. These are machine learning models trained on massive amounts of text. Through that training, they develop a surprisingly deep understanding of language: grammar, facts, reasoning, context, tone. When you ask one a question, it's not "looking up" an answer. It's generating a response word by word, based on patterns learned during training.</p>
+          <p>The reason you access them through a website is simple: those models are enormous. Running them requires serious computing power — GPUs, memory, specialized infrastructure. Companies like OpenAI and Anthropic run all of that in the cloud, and you access the result through an API.</p>
+          <p>But here's the thing: not all models are that big. And not all of them are proprietary.</p>
+
+          <h2>Open Source Models Changed Everything</h2>
+          <p>Over the last two years, a wave of high-quality open source language models has been released to the public. Anyone can download them, run them, modify them, build with them. No API keys, no usage limits, no terms of service telling you what you can and can't do with them.</p>
+          <p>The most notable ones right now:</p>
+          <ul>
+            <li><strong>Llama (Meta)</strong> — Meta's flagship open source model family. The latest versions are genuinely impressive — competitive with commercial models on many tasks. Probably the most widely used open model in the world.</li>
+            <li><strong>Mistral</strong> — A French AI company that punches well above its weight. Their models are known for being efficient: smaller in size, but remarkably capable. Great for running on consumer hardware.</li>
+            <li><strong>Gemma (Google)</strong> — Google's open model series. Designed with a focus on safety and usability. Good documentation, well-supported.</li>
+            <li><strong>Phi (Microsoft)</strong> — Surprisingly capable small models. Microsoft has pushed the idea that bigger isn't always better, and Phi is the proof.</li>
+          </ul>
+          <p>These models aren't toys. They can write code, summarize documents, answer complex questions, translate text, and hold a coherent conversation — all without sending a single byte to an external server.</p>
+
+          <h2>Why Running Locally Is More Powerful Than It Sounds</h2>
+          <p><strong>Privacy, for real.</strong> Everything you type into ChatGPT is processed on OpenAI's servers. That's fine for most use cases — but think about what you actually type into these tools: internal documents, personal notes, confidential business information, legal questions, medical concerns. With a local model, none of that leaves your machine. Ever.</p>
+          <p><strong>No costs, no limits.</strong> Commercial AI APIs charge per token (roughly per word). If you're using AI heavily — for automation, for document processing, for research — those costs add up fast. A local model runs as many requests as you want, for free, forever.</p>
+          <p><strong>Works offline.</strong> On a plane. In a location with bad internet. On an air-gapped machine that can never touch the outside world. Local models don't care.</p>
+          <p><strong>Full control.</strong> You can customize how the model behaves, what it knows, how it responds. You can fine-tune it on your own data. You can integrate it into your own tools and pipelines without going through anyone's API.</p>
+
+          <h2>What Does All That Weird Naming Mean?</h2>
+          <p>When you start exploring models, you'll run into things like <code>Llama 3.2 3B Q4_K_M</code> or <code>Mistral 7B Q8</code> and it might look like a secret code. It's not. It has logic.</p>
+          <p><strong>The number before the "B"</strong> is the number of parameters, in billions. Parameters are, roughly speaking, the internal "adjustments" the model learned during training — the more it has, the more capable it is at understanding and generating text. A 3B model has 3 billion parameters; a 70B model has 70 billion.</p>
+          <p>The practical difference: a 7B model can hold a fluent conversation and handle everyday tasks without a problem. A 70B model gets close to the quality of commercial models. The trade-off is the hardware they require.</p>
+          <p><strong>The Q and the numbers after it</strong> refer to quantization. It's a technique that "compresses" the model so it takes up less memory, with minimal quality loss. An unquantized model in its full version (FP16) can be three or four times heavier than its quantized version. In practice:</p>
+          <ul>
+            <li><strong>Q4</strong> — high compression, lightweight, slightly reduced quality. The sweet spot for most people.</li>
+            <li><strong>Q8</strong> — moderate compression, better quality, but needs more RAM.</li>
+            <li><strong>Q4_K_M, Q5_K_S</strong> — finer variants of the process. The letter at the end (S, M, L) indicates the size of the variant within that quantization: Small, Medium, Large. Bigger = better quality, more memory.</li>
+          </ul>
+          <p>In short: if you see <code>Mistral 7B Q4_K_M</code>, you're looking at a 7-billion-parameter model, with 4-bit quantization, in its medium variant. That's probably the kind of model you'll start with — and it works really well.</p>
+
+          <h2>What Hardware Do You Actually Need?</h2>
+          <p>The main constraint is RAM — or VRAM if you have a dedicated GPU. But it's more accessible than you'd think:</p>
+          <ul>
+            <li><strong>8 GB RAM</strong> — You can run models like Mistral 7B or Phi-3 Mini. Perfectly usable for everyday tasks.</li>
+            <li><strong>16 GB RAM</strong> — Opens up a wider range of models and gives you noticeably better quality.</li>
+            <li><strong>32 GB RAM or a GPU with 8+ GB VRAM</strong> — You're in solid territory — models at this tier are genuinely impressive.</li>
+          </ul>
+          <p>You don't need a gaming PC. A mid-range laptop from the last few years can run a useful local LLM. It'll be slower than a cloud API, but for most use cases, that's a completely acceptable trade-off.</p>
+
+          <h2>How to Actually Run One</h2>
+          <p>The easiest way to get started is a tool called <strong>Ollama</strong>. It handles everything: downloading models, managing them, and running a local API that works just like OpenAI's. Think of it as the package manager for local LLMs — one command to install a model, one command to run it.</p>
+          <p>I've put together a step-by-step guide in a GitHub repository that walks you through the whole process — from installing Ollama to running your first model and interacting with it through a simple interface. No prior experience needed.</p>
+          <p>👉 <a href="https://github.com/tiagogarrel/local-llm-guide" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">github.com/tiagogarrel/local-llm-guide</a></p>
+          <p><strong>What if your machine isn't powerful enough?</strong> You can spin up a cloud virtual machine and run the model there. Providers like Google Cloud, AWS, or DigitalOcean let you rent a machine with decent specs for a few dollars an hour — you get the full local-model experience, just hosted on someone else's server. It's a good middle ground if you want to experiment without committing to new hardware.</p>
+
+          <h2>What Does This Mean for the Future?</h2>
+          <p>We're in an interesting moment. For most of AI's recent history, capability was tied directly to centralization. The best models required the biggest infrastructure, which meant going through a handful of large companies.</p>
+          <p>That's starting to change.</p>
+          <p>Open source models are closing the gap with proprietary ones faster than most people expected. The tooling to run them locally — like Ollama — has gotten simple enough that a non-technical person can get one running in under ten minutes. And hardware keeps getting cheaper and more capable.</p>
+          <p>The implication is significant: AI is moving from something you <em>access</em> to something you <em>own</em>. That shift has real consequences — for privacy, for cost, for who controls the tools people use to think and work.</p>
+          <p>In the near term, expect to see local models embedded in more software: your text editor, your email client, your operating system. Apple is already doing this with on-device AI. Others will follow.</p>
+          <p>The future of AI isn't just in the cloud. A lot of it is going to live on your machine — and that's probably a good thing.</p>
+        </div>
+      </div>
+
+      <!-- ES CONTENT -->
+      <div id="content-es" style="display:none;">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">IA</span>
+            <span class="tag">Open Source</span>
+            <span class="tag">LLMs</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">Abril 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">8 min de lectura</span>
+        </div>
+
+        <h1 class="post-title">¿Sabías que podés tener tu propio ChatGPT en tu PC?</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>La mayoría de las personas interactúan con la inteligencia artificial a través de una pestaña del navegador. Escribís, un servidor en algún lugar procesa tus palabras, y llega una respuesta. Simple, conveniente — y completamente fuera de tu control. Pero hay un movimiento creciente de personas que decidieron mantener las cosas más cerca de casa. Literalmente.</p>
+          <p>Podés ejecutar un modelo de IA potente en tu propia computadora. Sin internet. Sin suscripción. Sin que nadie lea tus prompts.</p>
+
+          <h2>Qué pasa realmente cuando usás ChatGPT</h2>
+          <p>Antes de entrar en el "cómo", conviene entender qué son estos modelos.</p>
+          <p>ChatGPT, Claude, Gemini — todos están construidos sobre lo que se llaman Modelos de Lenguaje Grandes, o LLMs (por sus siglas en inglés). Son modelos de machine learning entrenados con cantidades masivas de texto. A través de ese entrenamiento, desarrollan una comprensión del lenguaje sorprendentemente profunda: gramática, hechos, razonamiento, contexto, tono. Cuando le hacés una pregunta, no está "buscando" una respuesta. Está generando una respuesta palabra por palabra, en base a los patrones aprendidos durante el entrenamiento.</p>
+          <p>La razón por la que los accedés a través de un sitio web es simple: esos modelos son enormes. Ejecutarlos requiere un poder de cómputo serio — GPUs, memoria, infraestructura especializada. Empresas como OpenAI y Anthropic manejan todo eso en la nube, y vos accedés al resultado a través de una API.</p>
+          <p>Pero acá está la clave: no todos los modelos son tan grandes. Y no todos son propietarios.</p>
+
+          <h2>Los modelos open source lo cambiaron todo</h2>
+          <p>En los últimos dos años, una ola de modelos de lenguaje open source de alta calidad fue publicada para el público. Cualquiera puede descargarlos, ejecutarlos, modificarlos, construir con ellos. Sin claves de API, sin límites de uso, sin términos de servicio que te digan qué podés y qué no podés hacer con ellos.</p>
+          <p>Los más destacados hoy en día:</p>
+          <ul>
+            <li><strong>Llama (Meta)</strong> — La familia de modelos open source insignia de Meta. Las últimas versiones son genuinamente impresionantes — competitivas con modelos comerciales en muchas tareas. Probablemente el modelo abierto más usado del mundo.</li>
+            <li><strong>Mistral</strong> — Una empresa francesa de IA que rinde muy por encima de su peso. Sus modelos son conocidos por ser eficientes: más pequeños, pero sorprendentemente capaces. Ideales para ejecutar en hardware de consumo.</li>
+            <li><strong>Gemma (Google)</strong> — La serie de modelos abiertos de Google. Diseñados con foco en seguridad y usabilidad. Buena documentación, bien mantenidos.</li>
+            <li><strong>Phi (Microsoft)</strong> — Modelos pequeños sorprendentemente capaces. Microsoft apostó a la idea de que más grande no siempre es mejor, y Phi es la prueba.</li>
+          </ul>
+          <p>Estos modelos no son juguetes. Pueden escribir código, resumir documentos, responder preguntas complejas, traducir texto y mantener una conversación coherente — todo sin enviar ni un byte a un servidor externo.</p>
+
+          <h2>Por qué ejecutarlos localmente es más poderoso de lo que parece</h2>
+          <p><strong>Privacidad, en serio.</strong> Todo lo que escribís en ChatGPT se procesa en los servidores de OpenAI. Eso está bien para la mayoría de los casos — pero pensá en lo que realmente escribís en estas herramientas: documentos internos, notas personales, información empresarial confidencial, consultas legales, preguntas médicas. Con un modelo local, nada de eso sale de tu máquina. Nunca.</p>
+          <p><strong>Sin costos, sin límites.</strong> Las APIs de IA comerciales cobran por token (aproximadamente por palabra). Si usás IA de forma intensiva — para automatización, procesamiento de documentos, investigación — esos costos se acumulan rápido. Un modelo local ejecuta todas las consultas que quieras, gratis, para siempre.</p>
+          <p><strong>Funciona sin conexión.</strong> En un avión. En un lugar con mala internet. En una máquina aislada que nunca puede tocar el mundo exterior. Los modelos locales no dependen de nada de eso.</p>
+          <p><strong>Control total.</strong> Podés personalizar cómo se comporta el modelo, qué sabe, cómo responde. Podés afinarlo con tus propios datos. Podés integrarlo en tus propias herramientas y flujos de trabajo sin pasar por la API de nadie.</p>
+
+          <h2>¿Qué significa toda esa nomenclatura rara?</h2>
+          <p>Cuando empezás a explorar modelos, te encontrás con cosas como <code>Llama 3.2 3B Q4_K_M</code> o <code>Mistral 7B Q8</code> y puede parecer un código secreto. No lo es. Tiene lógica.</p>
+          <p><strong>El número antes de la "B"</strong> indica la cantidad de parámetros del modelo, en miles de millones. Los parámetros son, simplificando mucho, los "ajustes internos" que el modelo aprendió durante su entrenamiento — cuantos más tiene, más capacidad tiene para entender y generar texto. Un modelo de 3B tiene 3.000 millones de parámetros; uno de 70B tiene 70.000 millones.</p>
+          <p>La diferencia práctica: un modelo de 7B puede mantener una conversación fluida y resolver tareas del día a día sin problema. Uno de 70B se acerca a la calidad de los modelos comerciales. El trade-off es el hardware que requieren.</p>
+          <p><strong>La Q y los números que la siguen</strong> se refieren a la cuantización. Es una técnica que "comprime" el modelo para que ocupe menos memoria, con una pérdida mínima de calidad. En la práctica:</p>
+          <ul>
+            <li><strong>Q4</strong> — compresión alta, pesa poco, calidad levemente reducida. El punto dulce para la mayoría.</li>
+            <li><strong>Q8</strong> — compresión moderada, mejor calidad, pero requiere más RAM.</li>
+            <li><strong>Q4_K_M, Q5_K_S</strong> — variantes más finas del proceso. La letra al final (S, M, L) indica el tamaño de la variante: Small, Medium, Large. Más grande = mejor calidad, más memoria.</li>
+          </ul>
+          <p>En resumen: si ves <code>Mistral 7B Q4_K_M</code>, estás mirando un modelo de 7.000 millones de parámetros, con cuantización de 4 bits, en su variante mediana. Es probablemente el tipo de modelo con el que vas a empezar — y funciona muy bien.</p>
+
+          <h2>¿Qué hardware necesitás realmente?</h2>
+          <p>La principal limitación es la RAM — o VRAM si tenés una GPU dedicada. Pero es más accesible de lo que se imagina:</p>
+          <ul>
+            <li><strong>8 GB de RAM</strong> — Podés ejecutar modelos como Mistral 7B o Phi-3 Mini. Perfectamente útiles para tareas cotidianas.</li>
+            <li><strong>16 GB de RAM</strong> — Abre un rango más amplio de modelos y da una calidad notablemente mejor.</li>
+            <li><strong>32 GB de RAM o una GPU con 8+ GB de VRAM</strong> — Estás en terreno sólido — los modelos en este nivel son genuinamente impresionantes.</li>
+          </ul>
+          <p>No necesitás una PC gamer. Una laptop de gama media de los últimos años alcanza. Será más lento que una API en la nube, pero para la mayoría de los casos de uso, es una concesión completamente aceptable.</p>
+
+          <h2>Cómo ejecutar uno</h2>
+          <p>La forma más fácil de empezar es una herramienta llamada <strong>Ollama</strong>. Se encarga de todo: descargar modelos, gestionarlos y ejecutar una API local que funciona igual que la de OpenAI. Pensalo como el gestor de paquetes de los LLMs locales — un comando para instalar un modelo, un comando para ejecutarlo.</p>
+          <p>Armé una guía paso a paso en un repositorio de GitHub que recorre todo el proceso — desde instalar Ollama hasta ejecutar tu primer modelo e interactuar con él a través de una interfaz simple. No se necesita experiencia previa.</p>
+          <p>👉 <a href="https://github.com/tiagogarrel/local-llm-guide" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">github.com/tiagogarrel/local-llm-guide</a></p>
+          <p><strong>¿Y si tu máquina no tiene suficiente potencia?</strong> Podés levantar una máquina virtual en la nube y ejecutar el modelo ahí. Proveedores como Google Cloud, AWS o DigitalOcean te permiten alquilar una máquina con buenas especificaciones por unos pocos dólares la hora. Es un buen punto intermedio si querés experimentar sin comprar hardware nuevo.</p>
+
+          <h2>¿Qué significa esto para el futuro?</h2>
+          <p>Estamos en un momento interesante. Durante la mayor parte de la historia reciente de la IA, la capacidad estaba directamente ligada a la centralización. Los mejores modelos requerían la mayor infraestructura, lo que significaba pasar por un puñado de grandes empresas.</p>
+          <p>Eso está empezando a cambiar.</p>
+          <p>Los modelos open source están cerrando la brecha con los propietarios más rápido de lo que la mayoría esperaba. Las herramientas para ejecutarlos localmente se han vuelto lo suficientemente simples como para que alguien sin experiencia técnica tenga uno funcionando en menos de diez minutos.</p>
+          <p>La implicación es significativa: la IA está pasando de ser algo a lo que <em>accedés</em> a algo que <em>poseés</em>. Ese cambio tiene consecuencias reales — en privacidad, en costos, en quién controla las herramientas que las personas usan para pensar y trabajar.</p>
+          <p>En el corto plazo, esperá ver modelos locales integrados en más software: tu editor de texto, tu cliente de correo, tu sistema operativo. Apple ya lo está haciendo con IA en el dispositivo. Otros seguirán.</p>
+          <p>El futuro de la IA no está solo en la nube. Gran parte de él va a vivir en tu máquina — y eso probablemente sea algo bueno.</p>
+        </div>
+      </div>
+
+      <div class="post-footer-nav">
+        <a href="../index.html#blog" data-i18n="back">← Back to Blog</a>
+        <a href="https://www.linkedin.com/in/tiago-garrel/" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Tiago Garrel · Built with care and caffeine.</p>
+    </div>
+  </footer>
+
+  <script>
+    'use strict';
+    const $ = s => document.querySelector(s);
+
+    // Theme
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+    function setTheme(t) {
+      currentTheme = t;
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('theme', t);
+      $('#themeLight').classList.toggle('active', t === 'light');
+      $('#themeDark').classList.toggle('active',  t === 'dark');
+    }
+    setTheme(currentTheme);
+    $('#themeToggle').addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+
+    // Language
+    let currentLang = localStorage.getItem('lang') || 'en';
+    function setLang(l) {
+      currentLang = l;
+      localStorage.setItem('lang', l);
+      document.documentElement.setAttribute('lang', l);
+      $('#langEN').classList.toggle('active', l === 'en');
+      $('#langES').classList.toggle('active', l === 'es');
+      $('#content-en').style.display = l === 'en' ? '' : 'none';
+      $('#content-es').style.display = l === 'es' ? '' : 'none';
+      document.querySelector('[data-i18n="back"]').textContent   = l === 'en' ? '← Back to Blog' : '← Volver al Blog';
+      document.querySelectorAll('[data-i18n="back"]').forEach(el => {
+        el.textContent = l === 'en' ? '← Back to Blog' : '← Volver al Blog';
+      });
+      // Update page title
+      document.title = l === 'en'
+        ? 'Did You Know You Can Run Your Own ChatGPT on Your PC? — Tiago Garrel'
+        : '¿Sabías que podés tener tu propio ChatGPT en tu PC? — Tiago Garrel';
+    }
+    setLang(currentLang);
+    $('#langToggle').addEventListener('click', () => setLang(currentLang === 'en' ? 'es' : 'en'));
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      $('#navbar').classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

@@ -373,6 +373,7 @@ ul { list-style: none; }
   align-self: flex-start;
 }
 .blog-read-more:hover { color: var(--accent-light); gap: 0.5rem; }
+.blog-coming-soon-badge { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); background: var(--accent-subtle); border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.65rem; align-self: flex-start; }
 
 /* ============================================================
    Contact

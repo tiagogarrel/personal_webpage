@@ -81,7 +81,7 @@ const translations = {
           date: 'April 2026',
           tags: ['AI', 'Open Source', 'LLMs'],
           summary: 'Running a powerful AI model locally — no internet, no subscription, no one reading your prompts. What open source models are, why it matters, and how to get one running in under 10 minutes.',
-          url: '#',
+          url: 'blog/local-llms.html',
         },
       ],
     },
@@ -165,7 +165,7 @@ const translations = {
           date: 'Abril 2026',
           tags: ['IA', 'Open Source', 'LLMs'],
           summary: 'Ejecutar un modelo de IA potente en tu propia computadora — sin internet, sin suscripción, sin que nadie lea tus prompts. Qué son los modelos open source, por qué importa y cómo tener uno funcionando en menos de 10 minutos.',
-          url: '#',
+          url: 'blog/local-llms.html',
         },
       ],
     },
@@ -301,7 +301,9 @@ function renderBlog(blog) {
       </div>
       <h3 class="blog-title">${post.title}</h3>
       <p class="blog-summary">${post.summary}</p>
-      <a href="${post.url}" class="blog-read-more" ${post.url === '#' ? '' : 'target="_blank" rel="noopener"'}>${blog.read_more}</a>
+      ${post.url && post.url !== '#'
+        ? `<a href="${post.url}" target="_blank" rel="noopener" class="blog-read-more">${blog.read_more}</a>`
+        : `<span class="blog-coming-soon-badge">Coming soon</span>`}
     </div>`).join('');
   observeNew('.blog-card');
 }
