@@ -119,3 +119,4 @@ ollama ps                # see what's currently running
 ---
 
 Questions or issues? Open a GitHub issue and I'll take a look.
+"# local-llm-guide" 

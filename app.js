@@ -77,6 +77,13 @@ const translations = {
       read_more: 'Read post →',
       items: [
         {
+          title: "Everyone's Talking About Agents. What Are They, and How Do I Build My Own?",
+          date: 'May 2026',
+          tags: ['AI', 'Agents', 'Python'],
+          summary: 'Everyone says "AI agents" like it\'s magic. It\'s not. Here\'s what they actually are, three real use cases already happening today, and a working Python example that shows you exactly how the LLM call works under the hood.',
+          url: 'blog/ai-agents.html',
+        },
+        {
           title: 'Did You Know You Can Run Your Own ChatGPT on Your PC?',
           date: 'April 2026',
           tags: ['AI', 'Open Source', 'LLMs'],
@@ -160,6 +167,13 @@ const translations = {
       subtitle: 'Reflexiones sobre ingeniería de datos, analítica y la intersección entre operaciones y datos.',
       read_more: 'Leer post →',
       items: [
+        {
+          title: 'Todo el mundo habla de los agents. ¿Qué son y cómo puedo tener los míos?',
+          date: 'Mayo 2026',
+          tags: ['IA', 'Agents', 'Python'],
+          summary: 'Todo el mundo dice "agentes de IA" como si fuera magia. No lo es. Qué son en la práctica, tres casos de uso reales que ya están pasando, y un ejemplo en Python que muestra exactamente cómo funciona la llamada al LLM por dentro.',
+          url: 'blog/ai-agents.html',
+        },
         {
           title: '¿Sabías que podés tener tu propio ChatGPT en tu PC?',
           date: 'Abril 2026',

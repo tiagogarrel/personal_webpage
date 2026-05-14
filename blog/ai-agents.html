@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Everyone's talking about AI agents. Here's what they actually are, real use cases, and a working Python example that shows you how they work from the inside." />
+  <title>Everyone's Talking About Agents. What Are They? — Tiago Garrel</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%238b5cf6'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Inter,system-ui,sans-serif' font-weight='800' font-size='13' fill='white'>TG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .post-container { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+    .post-wrapper   { padding: 120px 0 96px; }
+
+    .post-back {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+      transition: color var(--transition); margin-bottom: 2.8rem;
+    }
+    .post-back:hover { color: var(--accent); }
+    .post-back svg  { transition: transform var(--transition); }
+    .post-back:hover svg { transform: translateX(-3px); }
+
+    .post-meta     { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .post-date     { font-size: 0.82rem; color: var(--text-muted); }
+    .post-dot      { color: var(--border); }
+    .post-read     { font-size: 0.82rem; color: var(--text-muted); }
+
+    .post-title {
+      font-size: clamp(1.75rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 2.4rem;
+    }
+
+    .post-divider { border: none; border-top: 1px solid var(--border-sub); margin: 2.8rem 0; }
+
+    .post-body { color: var(--text-muted); line-height: 1.85; font-size: 1.02rem; }
+    .post-body p  { margin-bottom: 1.4rem; }
+    .post-body h2 {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; margin: 2.8rem 0 1rem;
+    }
+    .post-body h2::before { content: '—  '; color: var(--accent); font-weight: 800; }
+    .post-body h3 {
+      font-size: 1.05rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.01em; margin: 2rem 0 0.7rem;
+    }
+    .post-body strong { color: var(--text); font-weight: 700; }
+    .post-body ul { list-style: none; margin: 1rem 0 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .post-body ul li { padding-left: 1.4rem; position: relative; }
+    .post-body ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.78rem; top: 0.18em; }
+    .post-body code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.88em;
+      background: var(--accent-subtle); color: var(--accent);
+      padding: 0.15em 0.45em; border-radius: 5px; border: 1px solid var(--border);
+    }
+    .post-body pre {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.4rem 1.6rem; overflow-x: auto;
+      margin: 1.6rem 0 2rem; line-height: 1.65;
+    }
+    .post-body pre code {
+      background: none; border: none; padding: 0;
+      font-size: 0.84rem; color: var(--text-muted);
+    }
+    .post-body .code-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      font-weight: 600; color: var(--accent); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 0.5rem; display: block;
+    }
+    .post-body .loop-diagram {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.2rem 1.6rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.84rem;
+      color: var(--text-muted); line-height: 1.9; margin: 1.2rem 0 1.8rem;
+    }
+
+    .post-footer-nav {
+      margin-top: 4rem; padding-top: 2rem;
+      border-top: 1px solid var(--border-sub);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .post-footer-nav a {
+      font-size: 0.88rem; font-weight: 600; color: var(--accent);
+      transition: color var(--transition);
+    }
+    .post-footer-nav a:hover { color: var(--accent-light); }
+
+    .nav-links { display: none; }
+    @media (max-width: 640px) {
+      .post-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo">TG<span class="logo-dot">.</span></a>
+      <div class="nav-controls">
+        <button class="seg-toggle" id="langToggle" aria-label="Toggle language">
+          <span class="seg-opt active" id="langEN">EN</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt" id="langES">ES</span>
+        </button>
+        <button class="seg-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="seg-opt" id="themeLight">☀</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt active" id="themeDark">☾</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="post-wrapper">
+    <div class="post-container">
+
+      <a href="../index.html#blog" class="post-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        <span data-i18n="back">Back to Blog</span>
+      </a>
+
+      <!-- ═══════════════════════════════════════════════ EN CONTENT -->
+      <div id="content-en">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Agents</span>
+            <span class="tag">Python</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">May 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">10 min read</span>
+        </div>
+
+        <h1 class="post-title">Everyone's Talking About Agents. What Are They, and How Do I Build My Own?</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>A few months ago I started hearing the word "agent" everywhere. LinkedIn, podcasts, work meetings. Everyone talking about "AI agents" as if it were the next great revolution — but very few people actually explaining what it means in practice.</p>
+          <p>It took me a while to understand it properly. Not because the concept is hard, but because most explanations fall into one of two extremes: either too abstract to tell you anything useful, or too technical to follow past the first two minutes.</p>
+          <p>This is the post I wish I had when I started. Let's break it down.</p>
+
+          <h2>The Difference That Actually Matters: Chatbot vs. Agent</h2>
+          <p>A chatbot responds. An agent acts.</p>
+          <p>When you ask ChatGPT a question, it gives you an answer. That's it. It doesn't do anything in the real world, doesn't query your systems, doesn't execute tasks. It's a conversation — a very intelligent one, but only a conversation.</p>
+          <p>An agent, on the other hand, can do things. It can query a database, send an email, run a script, call an API, save a file. It has access to tools, and it uses them to complete objectives.</p>
+          <p>The difference isn't in the AI model itself — it's the same underlying technology. The difference is in how the system around the model is built.</p>
+
+          <h2>The Three Ingredients of Any Agent</h2>
+          <p>No matter how complex an agent is, it always has these three components:</p>
+          <p><strong>1. A model that reasons (the brain).</strong> That's the LLM — GPT-4, Claude, Gemini, whichever. Its job is to understand the task, decide what to do, and generate responses. But on its own, it can't do anything outside the conversation.</p>
+          <p><strong>2. Tools it can use (the hands).</strong> These are real functions the model can invoke: query a database, call an external API, read a file, send a notification. The model doesn't execute them directly — it tells the system "I want to use this tool with these parameters," and the system does it.</p>
+          <p><strong>3. A reasoning loop (the cycle).</strong> This is the key part. An agent doesn't respond once and stop. It follows a cycle:</p>
+
+          <div class="loop-diagram">
+Receives a task<br>
+&nbsp;&nbsp;→ Reasons: what do I need to solve this?<br>
+&nbsp;&nbsp;→ Uses a tool<br>
+&nbsp;&nbsp;→ Observes the result<br>
+&nbsp;&nbsp;→ Done? No → keeps reasoning<br>
+&nbsp;&nbsp;→ Done? Yes → responds
+          </div>
+
+          <p>This loop is what makes it an "agent." It can take multiple steps, adapt to intermediate results, and reach an objective without human intervention at every step.</p>
+
+          <h2>Real Use Cases — the Ones Already Happening</h2>
+          <p>Enough theory. Here are three concrete examples of the kind of agents being used today.</p>
+
+          <h3>1. Data monitoring agent</h3>
+          <p>Imagine you have an important metric in your database — daily sales, active users, whatever matters to you. An agent can query that metric every morning, compare it to the previous day, and if there's an unusual variation, send you an alert with context: "Today's sales are 40% below the 7-day average. The most affected products are X and Y." It doesn't just tell you something happened. It explains what happened.</p>
+
+          <h3>2. Internal support agent</h3>
+          <p>In many companies, the support team answers the same questions over and over: how to reset a password, what's the process for X, where's document Y. An agent connected to the company's knowledge base can answer those questions automatically, query internal systems when it needs real-time data, and escalate to a human only when it genuinely doesn't know the answer.</p>
+
+          <h3>3. Weekly reporting agent</h3>
+          <p>Every Monday, someone has to put together the weekly report. Data from different sources, an analysis, the key metrics. An agent can do that work: queries the sources, aggregates the data, generates the analysis text, and sends the email. What used to take two hours now happens in five minutes with no supervision.</p>
+
+          <h2>Let's Look at the Code: a Simple Agent in Python</h2>
+          <p>So it doesn't stay only in theory, here's a real, working example of how to build an agent. Just Python and Claude's API — no frameworks, no black magic.</p>
+          <p>The idea: an agent that has access to two tools — querying the weather and doing math. We give it a task in plain language and it decides how to solve it.</p>
+
+          <pre><code>import anthropic
+import json
+
+client = anthropic.Anthropic()  # uses ANTHROPIC_API_KEY from env
+
+# -----------------------------------------------------------
+# STEP 1: The tools — what the agent can do
+# -----------------------------------------------------------
+# These are regular Python functions. The agent doesn't execute
+# them directly; it "requests" them and the system runs them.
+
+def get_weather(city: str) -> str:
+    """In production, this would call a real weather API."""
+    data = {
+        "Buenos Aires": "22°C, partly cloudy",
+        "Barcelona":    "18°C, sunny",
+        "Madrid":       "25°C, clear"
+    }
+    return data.get(city, f"No data for {city}")
+
+def calculate(expression: str) -> str:
+    try:
+        return str(eval(expression))
+    except Exception as e:
+        return f"Error: {e}"
+
+def run_tool(name: str, params: dict) -> str:
+    if name == "get_weather":
+        return get_weather(params["city"])
+    elif name == "calculate":
+        return calculate(params["expression"])
+    return "Tool not found"
+
+# We tell the model what tools exist and how to use them
+tools = [
+    {
+        "name": "get_weather",
+        "description": "Gets the current weather for a city",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "city": {"type": "string", "description": "City name"}
+            },
+            "required": ["city"]
+        }
+    },
+    {
+        "name": "calculate",
+        "description": "Evaluates a math expression. E.g.: '15 * 3 + 7'",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "expression": {"type": "string"}
+            },
+            "required": ["expression"]
+        }
+    }
+]
+
+# -----------------------------------------------------------
+# STEP 2: The agent loop — all the logic lives here
+# -----------------------------------------------------------
+def agent_loop(task: str):
+    print(f"\n>>> Task: {task}\n")
+    messages = [{"role": "user", "content": task}]
+
+    while True:
+
+        # ★★★ THIS IS THE KEY CALL ★★★
+        # We send the task to the LLM along with the list of tools.
+        # The model doesn't execute anything — it reasons and tells
+        # us what it wants to do next.
+        # It can reply with text (done) or request a tool (loop continues).
+        response = client.messages.create(
+            model="claude-opus-4-6",
+            max_tokens=1024,
+            tools=tools,        # ← the model knows what tools it has
+            messages=messages   # ← the full conversation history
+        )
+        # ★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+        # Did the model finish? Print the final response and exit.
+        if response.stop_reason == "end_turn":
+            final = next(b.text for b in response.content if hasattr(b, "text"))
+            print(f"✓ Final answer: {final}")
+            break
+
+        # Did the model request a tool? We run it.
+        tool_use   = next(b for b in response.content if b.type == "tool_use")
+        tool_name  = tool_use.name
+        tool_params = tool_use.input
+
+        print(f"  → Model requested: {tool_name}({tool_params})")
+        tool_result = run_tool(tool_name, tool_params)
+        print(f"  ← Result:          {tool_result}\n")
+
+        # Send the result back to the model and continue the loop
+        messages.append({"role": "assistant", "content": response.content})
+        messages.append({
+            "role": "user",
+            "content": [{
+                "type": "tool_result",
+                "tool_use_id": tool_use.id,
+                "content": tool_result
+            }]
+        })
+
+# -----------------------------------------------------------
+# Run the agent
+# -----------------------------------------------------------
+agent_loop("What's 15% of 340? Also, how's the weather in Madrid?")</code></pre>
+
+          <p><strong>What's happening here?</strong></p>
+          <p>The LLM call is the heart of the system (marked with ★). In that line, we pass the task and the list of available tools. The model responds in one of two ways: either with text (task finished) or by requesting a tool. If it requests a tool, we execute it, return the result, and call the model again. That cycle repeats until the model has everything it needs to give a final answer.</p>
+          <p>For this particular task, the agent will make two tool calls — one for the calculation, one for the weather — before returning a single final message with both answers.</p>
+
+          <h2>What Agents Are Not (and Why It Matters)</h2>
+          <p>With so much hype around the topic, it's worth being honest:</p>
+          <p><strong>They're not infallible.</strong> Agents make mistakes. If the model makes a wrong decision in step 2, the error can propagate through the entire loop. That's why design matters — you need to think carefully about what tools you give them and what limits you set.</p>
+          <p><strong>They're not autonomous by default.</strong> An agent does what you tell it to do, within the context you give it. It has no goals of its own, no initiative beyond the assigned task.</p>
+          <p><strong>They don't replace human judgment.</strong> At least not yet. The best use cases are ones where the agent does the heavy lifting and a human reviews or approves the final result. Oversight is still key.</p>
+
+          <h2>Where to Start</h2>
+          <p>If you want to experiment with agents, my recommendation is to start simple: think of a repetitive task you do often — a report, a query, a notification. Identify what "tools" an agent would need to do that task (what data does it query? what systems does it access?). Then build a minimal version with Python and a model API. You don't need complex frameworks to get started.</p>
+          <p>The biggest conceptual leap isn't in the code — it's in changing how you think about tasks. From "I'll ask the model" to "I'll give the model a task and let it decide how to solve it."</p>
+
+          <p><em>Do you have a repetitive task at work that an agent could automate? Let me know in the comments.</em></p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ ES CONTENT -->
+      <div id="content-es" style="display:none;">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">IA</span>
+            <span class="tag">Agents</span>
+            <span class="tag">Python</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">Mayo 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">10 min de lectura</span>
+        </div>
+
+        <h1 class="post-title">Todo el mundo habla de los agents. ¿Qué son y cómo puedo tener los míos?</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>Hace unos meses empecé a escuchar la palabra "agent" en todos lados. En LinkedIn, en podcasts, en reuniones de trabajo. Todo el mundo hablando de "agentes de IA" como si fuera la próxima gran revolución, pero muy pocos explicando qué significa en la práctica.</p>
+          <p>Yo mismo tardé un tiempo en entenderlo bien. No porque sea un concepto difícil, sino porque la mayoría de las explicaciones caen en uno de dos extremos: o son tan abstractas que no te dicen nada, o son tan técnicas que perdés el hilo a los dos minutos.</p>
+          <p>Este post es el que me hubiera gustado leer cuando empecé. Vamos por partes.</p>
+
+          <h2>La diferencia que importa: chatbot vs. agent</h2>
+          <p>Un chatbot responde. Un agent actúa.</p>
+          <p>Cuando le hacés una pregunta a ChatGPT, te da una respuesta. Eso es todo. No hace nada en el mundo real, no consulta tus sistemas, no ejecuta tareas. Es una conversación, muy inteligente, pero solo una conversación.</p>
+          <p>Un agent, en cambio, puede hacer cosas. Puede consultar una base de datos, mandar un mail, ejecutar un script, llamar a una API, guardar un archivo. Tiene acceso a herramientas, y las usa para completar objetivos.</p>
+          <p>La diferencia no está en el modelo de IA en sí — es la misma tecnología de base. La diferencia está en cómo está construido el sistema alrededor del modelo.</p>
+
+          <h2>Los tres ingredientes de cualquier agent</h2>
+          <p>No importa cuán complejo sea un agent, siempre tiene estos tres componentes:</p>
+          <p><strong>1. Un modelo que razona (el cerebro).</strong> Es el LLM — GPT-4, Claude, Gemini, el que sea. Su trabajo es entender la tarea, decidir qué hacer, y generar respuestas. Pero por sí solo, no puede hacer nada fuera de la conversación.</p>
+          <p><strong>2. Herramientas que puede usar (las manos).</strong> Son funciones reales que el modelo puede invocar: buscar en una base de datos, llamar a una API externa, leer un archivo, mandar una notificación. El modelo no las ejecuta directamente — le dice al sistema "quiero usar esta herramienta con estos parámetros", y el sistema lo hace.</p>
+          <p><strong>3. Un loop de razonamiento (el ciclo).</strong> Acá está la clave. Un agent no responde una vez y termina. Sigue un ciclo:</p>
+
+          <div class="loop-diagram">
+Recibe una tarea<br>
+&nbsp;&nbsp;→ Razona: ¿qué necesito para resolver esto?<br>
+&nbsp;&nbsp;→ Usa una herramienta<br>
+&nbsp;&nbsp;→ Observa el resultado<br>
+&nbsp;&nbsp;→ ¿Ya terminé? No → sigue razonando<br>
+&nbsp;&nbsp;→ ¿Ya terminé? Sí → responde
+          </div>
+
+          <p>Este loop es lo que lo hace "agente". Puede tomar múltiples pasos, adaptarse a resultados intermedios, y llegar a un objetivo sin intervención humana en cada paso.</p>
+
+          <h2>Casos de uso reales — los que ya están pasando</h2>
+          <p>Basta de teoría. Acá van tres ejemplos concretos del tipo de agents que se usan hoy.</p>
+
+          <h3>1. Agent de monitoreo de datos</h3>
+          <p>Imaginate que tenés una métrica importante en tu base de datos — ventas diarias, usuarios activos, lo que sea. Un agent puede consultar esa métrica cada mañana, compararla con el día anterior, y si hay una variación anormal, mandarte una alerta con el contexto: "Las ventas de hoy son un 40% menores al promedio de los últimos 7 días. Los productos más afectados son X e Y." No solo te avisa que algo pasó. Te explica qué pasó.</p>
+
+          <h3>2. Agent de soporte interno</h3>
+          <p>En muchas empresas, el equipo de soporte responde las mismas preguntas una y otra vez: cómo resetear una contraseña, cuál es el proceso para X, dónde está el documento Y. Un agent conectado a la base de conocimiento de la empresa puede responder esas preguntas automáticamente, consultar los sistemas internos cuando necesita datos en tiempo real, y escalar al humano solo cuando genuinamente no sabe la respuesta.</p>
+
+          <h3>3. Agent de reporting semanal</h3>
+          <p>Cada lunes hay que armar el reporte de la semana. Datos de diferentes fuentes, un análisis, las métricas clave. Un agent puede hacer ese trabajo: consulta las fuentes, agrega los datos, genera el texto del análisis, y manda el mail. Lo que antes llevaba dos horas, ahora pasa en cinco minutos sin que nadie lo supervise.</p>
+
+          <h2>Veamos el código: un agent simple en Python</h2>
+          <p>Para que no quede solo en teoría, acá hay un ejemplo real y funcional de cómo construir un agent. Solo Python y la API de Claude — sin frameworks, sin magia negra.</p>
+          <p>La idea: un agent que puede usar dos herramientas — consultar el clima y hacer cálculos. Le damos una tarea en lenguaje natural y él decide cómo resolverla.</p>
+
+          <pre><code>import anthropic
+import json
+
+client = anthropic.Anthropic()  # usa ANTHROPIC_API_KEY del entorno
+
+# -----------------------------------------------------------
+# PASO 1: Las herramientas — lo que el agent puede hacer
+# -----------------------------------------------------------
+# Son funciones Python normales. El agent no las ejecuta
+# directamente; las "pide" y el sistema las ejecuta por él.
+
+def get_weather(city: str) -> str:
+    """En producción, esto llamaría a una API real de clima."""
+    data = {
+        "Buenos Aires": "22°C, parcialmente nublado",
+        "Barcelona": "18°C, soleado",
+        "Madrid": "25°C, despejado"
+    }
+    return data.get(city, f"No tengo datos para {city}")
+
+def calculate(expression: str) -> str:
+    try:
+        return str(eval(expression))
+    except Exception as e:
+        return f"Error: {e}"
+
+def run_tool(name: str, params: dict) -> str:
+    if name == "get_weather":
+        return get_weather(params["city"])
+    elif name == "calculate":
+        return calculate(params["expression"])
+    return "Herramienta no encontrada"
+
+# Le decimos al modelo qué herramientas existen y cómo usarlas
+tools = [
+    {
+        "name": "get_weather",
+        "description": "Obtiene el clima actual de una ciudad",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "city": {"type": "string", "description": "Nombre de la ciudad"}
+            },
+            "required": ["city"]
+        }
+    },
+    {
+        "name": "calculate",
+        "description": "Evalúa una expresión matemática. Ej: '15 * 3 + 7'",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "expression": {"type": "string"}
+            },
+            "required": ["expression"]
+        }
+    }
+]
+
+# -----------------------------------------------------------
+# PASO 2: El loop del agent — acá vive toda la lógica
+# -----------------------------------------------------------
+def agent_loop(task: str):
+    print(f"\n>>> Tarea: {task}\n")
+    messages = [{"role": "user", "content": task}]
+
+    while True:
+
+        # ★★★ ESTA ES LA LLAMADA CLAVE ★★★
+        # Le mandamos la tarea al LLM junto con la lista de herramientas.
+        # El modelo no ejecuta nada — razona y nos dice qué quiere hacer.
+        # Puede responder con texto (terminó) o pedirnos que ejecutemos
+        # una herramienta (sigue el loop).
+        response = client.messages.create(
+            model="claude-opus-4-6",
+            max_tokens=1024,
+            tools=tools,        # ← el modelo sabe qué herramientas tiene
+            messages=messages   # ← todo el historial de la conversación
+        )
+        # ★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+        # ¿El modelo terminó? Muestra la respuesta final y sale.
+        if response.stop_reason == "end_turn":
+            final = next(b.text for b in response.content if hasattr(b, "text"))
+            print(f"✓ Respuesta final: {final}")
+            break
+
+        # ¿El modelo quiere usar una herramienta? La ejecutamos nosotros.
+        tool_use    = next(b for b in response.content if b.type == "tool_use")
+        tool_name   = tool_use.name
+        tool_params = tool_use.input
+
+        print(f"  → El modelo pidió: {tool_name}({tool_params})")
+        tool_result = run_tool(tool_name, tool_params)
+        print(f"  ← Resultado:       {tool_result}\n")
+
+        # Le devolvemos el resultado al modelo y seguimos el loop
+        messages.append({"role": "assistant", "content": response.content})
+        messages.append({
+            "role": "user",
+            "content": [{
+                "type": "tool_result",
+                "tool_use_id": tool_use.id,
+                "content": tool_result
+            }]
+        })
+
+# -----------------------------------------------------------
+# Probemos el agent
+# -----------------------------------------------------------
+agent_loop("¿Cuánto es el 15% de 340? Y de paso, ¿cómo está el clima en Madrid?")</code></pre>
+
+          <p><strong>¿Qué está pasando acá?</strong></p>
+          <p>La llamada al LLM es el corazón del sistema (marcada con ★). En esa línea, le pasamos la tarea y la lista de herramientas disponibles. El modelo responde de dos formas posibles: o con texto (tarea terminada) o pidiendo ejecutar una herramienta. Si pide una herramienta, nosotros la ejecutamos, le devolvemos el resultado, y volvemos a llamar al modelo. Ese ciclo se repite hasta que el modelo tiene toda la información que necesita para responder.</p>
+          <p>Para esta tarea en particular, el agent va a hacer dos llamadas de herramienta — una para el cálculo, otra para el clima — antes de darte la respuesta final en un solo mensaje.</p>
+
+          <h2>Lo que los agents no son (y por qué importa decirlo)</h2>
+          <p>Con tanto hype alrededor del tema, vale la pena ser honesto:</p>
+          <p><strong>No son infalibles.</strong> Los agents cometen errores. Si el modelo toma una decisión equivocada en el paso 2, el error se puede propagar por todo el loop. Por eso el diseño importa — hay que pensar bien qué herramientas les damos y qué límites les ponemos.</p>
+          <p><strong>No son autónomos por defecto.</strong> Un agent hace lo que le decís que haga, dentro del contexto que le diste. No tiene objetivos propios ni iniciativa más allá de la tarea asignada.</p>
+          <p><strong>No reemplazan el criterio humano.</strong> Al menos no todavía. Los mejores casos de uso son aquellos donde el agent hace el trabajo pesado y un humano revisa o aprueba el resultado final. La supervisión sigue siendo clave.</p>
+
+          <h2>¿Por dónde empezar?</h2>
+          <p>Si querés experimentar con agents, mi recomendación es empezar simple: pensá en una tarea repetitiva que hacés seguido — un reporte, una consulta, una notificación. Identificá qué "herramientas" necesitaría un agent para hacer esa tarea (¿qué datos consulta? ¿a qué sistemas accede?). Después construí una versión mínima con Python y la API de un modelo. No necesitás frameworks complejos para empezar.</p>
+          <p>El salto conceptual más grande no está en el código — está en cambiar la forma en que pensás las tareas. De "le pregunto al modelo" a "le doy una tarea al modelo y él decide cómo resolverla".</p>
+
+          <p><em>¿Tenés una tarea repetitiva en tu trabajo que podría automatizar un agent? Contame en los comentarios.</em></p>
+        </div>
+      </div>
+
+      <div class="post-footer-nav">
+        <a href="../index.html#blog" data-i18n="back">← Back to Blog</a>
+        <a href="https://www.linkedin.com/in/tiago-garrel/" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Tiago Garrel · Built with care and caffeine.</p>
+    </div>
+  </footer>
+
+  <script>
+    'use strict';
+    const $ = s => document.querySelector(s);
+
+    // Theme
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+    function setTheme(t) {
+      currentTheme = t;
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('theme', t);
+      $('#themeLight').classList.toggle('active', t === 'light');
+      $('#themeDark').classList.toggle('active',  t === 'dark');
+    }
+    setTheme(currentTheme);
+    $('#themeToggle').addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+
+    // Language
+    let currentLang = localStorage.getItem('lang') || 'en';
+    function setLang(l) {
+      currentLang = l;
+      localStorage.setItem('lang', l);
+      document.documentElement.setAttribute('lang', l);
+      $('#langEN').classList.toggle('active', l === 'en');
+      $('#langES').classList.toggle('active', l === 'es');
+      $('#content-en').style.display = l === 'en' ? '' : 'none';
+      $('#content-es').style.display = l === 'es' ? '' : 'none';
+      document.querySelectorAll('[data-i18n="back"]').forEach(el => {
+        el.textContent = l === 'en' ? '← Back to Blog' : '← Volver al Blog';
+      });
+      document.title = l === 'en'
+        ? "Everyone's Talking About Agents. What Are They? — Tiago Garrel"
+        : 'Todo el mundo habla de los agents. ¿Qué son? — Tiago Garrel';
+    }
+    setLang(currentLang);
+    $('#langToggle').addEventListener('click', () => setLang(currentLang === 'en' ? 'es' : 'en'));
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      $('#navbar').classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
