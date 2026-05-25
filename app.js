@@ -77,6 +77,13 @@ const translations = {
       read_more: 'Read post →',
       items: [
         {
+          title: 'How I Use Claude to Study. Consistently.',
+          date: 'May 2026',
+          tags: ['AI', 'Learning', 'Claude'],
+          summary: 'I built a personal study system with Claude — I call it Study Hub. An initial assessment, curiosity-driven sessions, structured docs after each one, and a weekly evaluation. Here\'s how the whole thing works.',
+          url: 'blog/study-hub.html',
+        },
+        {
           title: "Everyone's Talking About Agents. What Are They, and How Do I Build My Own?",
           date: 'May 2026',
           tags: ['AI', 'Agents', 'Python'],
@@ -167,6 +174,13 @@ const translations = {
       subtitle: 'Reflexiones sobre tech, datos y otras cosas.',
       read_more: 'Leer post →',
       items: [
+        {
+          title: 'Cómo uso Claude para aprender de forma consistente',
+          date: 'Mayo 2026',
+          tags: ['IA', 'Aprendizaje', 'Claude'],
+          summary: 'Me armé un sistema de estudio personal con Claude — le digo Study Hub. Un assessment inicial, sesiones guiadas por curiosidad, documentos estructurados después de cada una, y una evaluación semanal. Acá explico cómo funciona todo.',
+          url: 'blog/study-hub.html',
+        },
         {
           title: 'Todo el mundo habla de los agents. ¿Qué son y cómo puedo tener los míos?',
           date: 'Mayo 2026',
