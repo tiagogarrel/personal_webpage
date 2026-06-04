@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LLMs don't think — they predict. If your prompt is vague, the answer will be average. Here are the most common mistakes and how to fix them with concrete techniques." />
+  <title>Why Your Prompts Are Bad (And How to Fix Them) — Tiago Garrel</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%238b5cf6'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Inter,system-ui,sans-serif' font-weight='800' font-size='13' fill='white'>TG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .post-container { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+    .post-wrapper   { padding: 120px 0 96px; }
+
+    .post-back {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+      transition: color var(--transition); margin-bottom: 2.8rem;
+    }
+    .post-back:hover { color: var(--accent); }
+    .post-back svg  { transition: transform var(--transition); }
+    .post-back:hover svg { transform: translateX(-3px); }
+
+    .post-meta     { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .post-date     { font-size: 0.82rem; color: var(--text-muted); }
+    .post-dot      { color: var(--border); }
+    .post-read     { font-size: 0.82rem; color: var(--text-muted); }
+
+    .post-title {
+      font-size: clamp(1.75rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 2.4rem;
+    }
+
+    .post-divider { border: none; border-top: 1px solid var(--border-sub); margin: 2.8rem 0; }
+
+    .post-body { color: var(--text-muted); line-height: 1.85; font-size: 1.02rem; }
+    .post-body p  { margin-bottom: 1.4rem; }
+    .post-body h2 {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; margin: 2.8rem 0 1rem;
+    }
+    .post-body h2::before { content: '—  '; color: var(--accent); font-weight: 800; }
+    .post-body h3 {
+      font-size: 1.05rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.01em; margin: 2rem 0 0.7rem;
+    }
+    .post-body strong { color: var(--text); font-weight: 700; }
+    .post-body ul { list-style: none; margin: 1rem 0 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .post-body ul li { padding-left: 1.4rem; position: relative; }
+    .post-body ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.78rem; top: 0.18em; }
+    .post-body code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.88em;
+      background: var(--accent-subtle); color: var(--accent);
+      padding: 0.15em 0.45em; border-radius: 5px; border: 1px solid var(--border);
+    }
+
+    .prompt-block {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.4rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.84rem;
+      color: var(--text-muted); line-height: 1.8; margin: 0.8rem 0 1.4rem;
+    }
+    .prompt-block .bad  { color: #f87171; }
+    .prompt-block .good { color: #86efac; }
+    .prompt-block .label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 0.3rem; display: block;
+    }
+    .prompt-block .label.bad-label  { color: #f87171; }
+    .prompt-block .label.good-label { color: #86efac; }
+
+    .prompt-pair { display: flex; flex-direction: column; gap: 0.8rem; margin: 1rem 0 1.6rem; }
+    .prompt-single {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.9rem 1.2rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.83rem;
+      color: var(--text-muted); line-height: 1.75;
+    }
+    .prompt-single.bad-prompt  { border-left: 3px solid #f87171; }
+    .prompt-single.good-prompt { border-left: 3px solid #86efac; }
+    .prompt-single .prompt-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 0.35rem; display: block;
+    }
+    .prompt-single.bad-prompt  .prompt-label { color: #f87171; }
+    .prompt-single.good-prompt .prompt-label { color: #86efac; }
+
+    .exchange-block {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.2rem 1.6rem;
+      font-size: 0.91rem; color: var(--text-muted); line-height: 1.85;
+      margin: 1.2rem 0 1.8rem;
+    }
+    .exchange-block .speaker {
+      font-weight: 700; color: var(--accent); font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase; display: block;
+      margin-top: 0.9rem; margin-bottom: 0.2rem;
+    }
+    .exchange-block .speaker:first-child { margin-top: 0; }
+
+    .version-block {
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.2rem 1.5rem; margin: 1rem 0 1.2rem;
+    }
+    .version-block .version-label {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 0.6rem; display: block;
+    }
+    .version-block.v1 { border-left: 3px solid #f87171; }
+    .version-block.v1 .version-label { color: #f87171; }
+    .version-block.v2 { border-left: 3px solid #fbbf24; }
+    .version-block.v2 .version-label { color: #fbbf24; }
+    .version-block.v3 { border-left: 3px solid #86efac; }
+    .version-block.v3 .version-label { color: #86efac; }
+    .version-block p { margin-bottom: 0.6rem; font-size: 0.9rem; color: var(--text-muted); line-height: 1.75; }
+    .version-block p:last-child { margin-bottom: 0; }
+    .version-block code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82em;
+      background: var(--accent-subtle); color: var(--accent);
+      padding: 0.1em 0.4em; border-radius: 4px; border: 1px solid var(--border);
+    }
+
+    .callout {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px; padding: 1rem 1.4rem;
+      margin: 1.4rem 0; font-size: 0.94rem; color: var(--text-muted); line-height: 1.75;
+    }
+
+    .post-footer-nav {
+      margin-top: 4rem; padding-top: 2rem;
+      border-top: 1px solid var(--border-sub);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .post-footer-nav a {
+      font-size: 0.88rem; font-weight: 600; color: var(--accent);
+      transition: color var(--transition);
+    }
+    .post-footer-nav a:hover { color: var(--accent-light); }
+
+    .nav-links { display: none; }
+    @media (max-width: 640px) {
+      .post-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo">TG<span class="logo-dot">.</span></a>
+      <div class="nav-controls">
+        <button class="seg-toggle" id="langToggle" aria-label="Toggle language">
+          <span class="seg-opt active" id="langEN">EN</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt" id="langES">ES</span>
+        </button>
+        <button class="seg-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="seg-opt" id="themeLight">☀</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt active" id="themeDark">☾</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="post-wrapper">
+    <div class="post-container">
+
+      <a href="../index.html#blog" class="post-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        <span data-i18n="back">Back to Blog</span>
+      </a>
+
+      <!-- ═══════════════════════════════════════════════ EN CONTENT -->
+      <div id="content-en">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Productivity</span>
+            <span class="tag">Prompts</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">June 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">5 min read</span>
+        </div>
+
+        <h1 class="post-title">Why Your Prompts Are Bad (And How to Fix Them)</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>You type "explain inflation" and get three paragraphs that read like a Wikipedia summary. Frustrating. You figure AI just isn't that useful. But the problem isn't the model — it's the question.</p>
+          <p>LLMs don't think. They predict the most probable next token given the context you provide. If that context is vague, the answer will be average — not because the model is bad, but because statistically, that's the most likely response to that input. A good prompt narrows that probability space toward exactly where you want to go.</p>
+
+          <h2>The Most Common Mistakes</h2>
+
+          <h3>1. Too vague</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Before</span>"Explain machine learning"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ After</span>"Explain what overfitting is using a concrete analogy, for someone who knows how to code but has no statistics background"</div>
+          </div>
+
+          <h3>2. No role or target audience</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Before</span>"Write me an email"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ After</span>"Write an email to the CTO of a 50-person startup explaining why we need to migrate our database. Keep it direct, no unnecessary jargon, 3 paragraphs max"</div>
+          </div>
+
+          <h3>3. No expected output format</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Before</span>"Give me ideas for a data project"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ After</span>"Give me 5 data project ideas for my portfolio. For each: title, problem it solves, recommended stack, and difficulty 1–5. Format: table"</div>
+          </div>
+
+          <h3>4. Closed question when you want analysis</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Before</span>"Is Kafka or RabbitMQ better?"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ After</span>"Compare Kafka and RabbitMQ for processing ~10,000 events/sec with critical fault tolerance. When would I use each? What tradeoffs am I dealing with?"</div>
+          </div>
+
+          <h3>5. Multiple requests in one prompt</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Before</span>"Fix my code, explain why it failed, rewrite it more efficiently, and give me 3 alternatives"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ After</span>Split into steps. Fix and explain first, then optimize. One task at a time.</div>
+          </div>
+
+          <h2>Techniques That Actually Work</h2>
+
+          <h3>1. Assign a role</h3>
+          <p>"You are a senior data engineer with experience in distributed systems..." — this isn't magic, it's context. The model calibrates the depth and language of its response based on who it's supposed to be.</p>
+
+          <h3>2. Give context about the end goal</h3>
+          <p>Don't just say what you want — say what it's for. "I need to understand this to make an architecture decision this week" produces a very different answer than "I need to understand this for an exam."</p>
+
+          <h3>3. Chain of thought — ask it to reason</h3>
+          <p>Add "Think step by step before answering" or "Explain your reasoning." This prompts the model to verbalize intermediate steps before reaching a conclusion. On complex problems, the quality improvement is noticeable. The model isn't thinking more — it's externalizing the process, which forces it to be more careful.</p>
+
+          <h3>4. Few-shot: show the output you want</h3>
+          <p>If you want a specific format, give an example. "Give me an analysis structured like this: [example]" works much better than describing the format in words.</p>
+
+          <h3>5. Iterate, don't restart</h3>
+          <p>If the answer wasn't quite right, don't open a new chat. Add context: "Good, but make this shorter and more direct" or "The tone works, but I need more concrete examples." The context you built up is an asset — don't throw it away.</p>
+
+          <h2>Ask It to Ask You Questions First</h2>
+          <p>Before tackling something complex, ask the model to ask you what it needs to know:</p>
+
+          <div class="callout">
+            "Before helping me, ask whatever questions you need to fully understand the context. Once you have what you need, we'll get started."
+          </div>
+
+          <p>This eliminates assumptions you didn't even realize you were making. The model will surface things that would have caused misunderstandings if it had just answered directly.</p>
+
+          <div class="exchange-block">
+            <span class="speaker">You</span>
+            "I want to build a dashboard to monitor my data pipeline. Before proposing anything, ask me the questions you need."
+            <span class="speaker">Claude</span>
+            "How many pipelines do you want to monitor? What kind of failures are you prioritizing — latency, errors, missing data? Do you have a preferred visualization tool?"
+          </div>
+
+          <p>Three questions that completely change the answer.</p>
+
+          <h2>Pro Technique: Plan Before You Execute</h2>
+          <p>For important tasks, this is the flow I find most useful:</p>
+          <ul>
+            <li>Long prompt with full context: objective, constraints, what you've already tried</li>
+            <li>"Do you have any questions about the context or goal before we start?"</li>
+            <li>"What approaches do you see? Give me 2 or 3 options with pros and cons"</li>
+            <li>Resolve the questions, pick an approach</li>
+            <li><strong>Optional but powerful:</strong> ask it to generate the final prompt to run the task in a clean chat — without the noise of the planning conversation</li>
+          </ul>
+
+          <p>That last step sounds odd but it works well. The model distills everything into an optimized prompt you can paste into a fresh session and execute cleanly, without carrying all the back-and-forth as context.</p>
+
+          <div class="exchange-block">
+            <span class="speaker">You</span>
+            "I want to build a daily alert system for a data pipeline that processes sales data. It runs on Airflow, results go to a MySQL database. Failures have happened twice this month — once due to a network timeout, once due to a schema mismatch. I want to catch both types. Before proposing anything, ask what you need."
+            <span class="speaker">Claude</span>
+            "Do you want the alerts to go to email, Slack, or both? Should the system distinguish between critical failures and warnings? Do you already have any monitoring in place I can build on?"
+            <span class="speaker">You</span>
+            "[answers]"
+            <span class="speaker">Claude</span>
+            "Based on everything, here are 2 approaches: [Option A: lightweight callbacks in Airflow tasks] vs [Option B: centralized monitoring with Airflow's on_failure_callback + a notifications service]. Here are the tradeoffs..."
+          </div>
+
+          <h2>Bonus: Reasoning Models and Compute</h2>
+          <p>Reasoning models — o1 and o3 from OpenAI, Claude with extended thinking enabled, DeepSeek R1, Gemini Thinking — have an internal "thinking" step before they respond. This isn't marketing: the model generates intermediate reasoning that influences the quality of the final answer, even when you don't see it.</p>
+          <p>A prompt that clearly signals the complexity of the problem can lead the model to allocate more of that internal reasoning. Worth knowing: this applies specifically to these models. On standard models like GPT-4o or Claude without extended thinking, the effect is much more limited.</p>
+
+          <h2>A Complete Practical Example</h2>
+          <p>Base request: <em>help me structure an analysis of a new feature's impact on user retention.</em></p>
+
+          <div class="version-block v1">
+            <span class="version-label">Version 1 — Bad prompt</span>
+            <p><code>"How do I analyze the impact of a feature on user retention?"</code></p>
+            <p>Result: a generic list of metrics that could apply to any product in any industry. Useful as a first step, useless as an answer to your specific problem.</p>
+          </div>
+
+          <div class="version-block v2">
+            <span class="version-label">Version 2 — With basic techniques</span>
+            <p><code>"You're a senior product analyst. We have a B2C app with 50k active users and just launched a guided onboarding feature. I need to structure an analysis of its impact on 30-day retention. Give me an analysis framework with key metrics and how to interpret them. Format: sections with subheadings."</code></p>
+            <p>Result: a concrete framework with hypotheses, control metrics, suggested segmentation, and success criteria. Directly usable.</p>
+          </div>
+
+          <div class="version-block v3">
+            <span class="version-label">Version 3 — With planning</span>
+            <p>[Same context] + <code>"Before proposing a structure, ask me the questions you need. Then give me 2 possible approaches with pros and cons."</code></p>
+            <p>Claude asks: "Do you have a control group? Was the rollout gradual or to all users at once? What's your definition of 30-day retention?" — and with those answers generates two approaches (A/B testing vs. cohort analysis), explaining when to use each.</p>
+            <p>The difference between the three versions isn't the model — it's the context you gave it.</p>
+          </div>
+
+          <h2>Where to Start</h2>
+          <p>You don't need to change everything at once. Just applying the first two — assigning a role and specifying the expected output format — will already make a noticeable difference. The rest comes naturally as you use these models more regularly.</p>
+          <p>What's the mistake you make most often?</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ ES CONTENT -->
+      <div id="content-es" style="display:none;">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">IA</span>
+            <span class="tag">Productividad</span>
+            <span class="tag">Prompts</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">Junio 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">5 min de lectura</span>
+        </div>
+
+        <h1 class="post-title">Por qué tus prompts son malos (y cómo arreglarlos)</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>Escribís "explicame la inflación" y recibís tres párrafos que parecen sacados de Wikipedia. Frustrante. Pensás que la IA no sirve para nada serio. Pero el problema no está en el modelo — está en la pregunta.</p>
+          <p>Los LLMs no piensan. Predicen el siguiente token más probable dado el contexto que les diste. Si ese contexto es vago, la respuesta va a ser promedio — no porque el modelo sea malo, sino porque estadísticamente es la respuesta más probable a esa entrada. Un buen prompt acota ese espacio de probabilidad hacia exactamente donde vos querés llegar.</p>
+
+          <h2>Los errores más comunes</h2>
+
+          <h3>1. Demasiado vago</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Antes</span>"Explicame el machine learning"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ Después</span>"Explicame qué es el overfitting usando una analogía concreta, para alguien que sabe programar pero no tiene base en estadística"</div>
+          </div>
+
+          <h3>2. Sin contexto de rol ni audiencia</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Antes</span>"Redactame un mail"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ Después</span>"Redactá un mail para el CTO de una startup de 50 personas explicando por qué necesitamos migrar la base de datos. Tono directo, sin tecnicismos innecesarios, máximo 3 párrafos"</div>
+          </div>
+
+          <h3>3. Sin especificar el formato esperado</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Antes</span>"Dame ideas para un proyecto de datos"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ Después</span>"Dame 5 ideas de proyectos de datos para mi portfolio. Para cada una: título, problema que resuelve, stack recomendado y dificultad del 1 al 5. Formato: tabla"</div>
+          </div>
+
+          <h3>4. Pregunta cerrada cuando querés análisis</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Antes</span>"¿Es mejor Kafka o RabbitMQ?"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ Después</span>"Comparame Kafka y RabbitMQ para procesar ~10.000 eventos por segundo con tolerancia a fallos crítica. ¿Cuándo usaría cada uno? ¿Qué tradeoffs tengo que considerar?"</div>
+          </div>
+
+          <h3>5. Múltiples pedidos en un solo prompt</h3>
+          <div class="prompt-pair">
+            <div class="prompt-single bad-prompt"><span class="prompt-label">❌ Antes</span>"Corregí mi código, explicame por qué fallaba, reescribirlo más eficiente y dame 3 alternativas"</div>
+            <div class="prompt-single good-prompt"><span class="prompt-label">✅ Después</span>Dividir en pasos. Primero corregir y explicar, después optimizar. Una tarea por vez.</div>
+          </div>
+
+          <h2>Técnicas que realmente funcionan</h2>
+
+          <h3>1. Asignale un rol</h3>
+          <p>"Sos un data engineer senior con experiencia en sistemas distribuidos..." — esto no es magia, es contexto. El modelo calibra el nivel de profundidad y el lenguaje de su respuesta según quién se supone que es.</p>
+
+          <h3>2. Contexto del objetivo final</h3>
+          <p>No solo digas qué querés — decí para qué. "Necesito entender esto para tomar una decisión de arquitectura esta semana" produce una respuesta muy distinta a "necesito entender esto para un examen".</p>
+
+          <h3>3. Chain of thought — pedile que razone</h3>
+          <p>Agregá "Pensá paso a paso antes de responder" o "Explicá tu razonamiento". Esto hace que el modelo verbalice los pasos intermedios antes de llegar a la conclusión. En problemas complejos, la mejora de calidad es notoria. El modelo no está pensando más — está externalizando el proceso, lo que lo obliga a ser más cuidadoso.</p>
+
+          <h3>4. Few-shot: mostrá el output que querés</h3>
+          <p>Si querés una respuesta en un formato específico, dá un ejemplo. "Dame un análisis estructurado así: [ejemplo]" funciona mucho mejor que describir el formato con palabras.</p>
+
+          <h3>5. Iterá, no reescribas desde cero</h3>
+          <p>Si la respuesta no era lo que necesitabas, no abras un chat nuevo. Agregá contexto: "Bien, pero hacelo más corto y directo" o "El tono está bien, pero necesito más ejemplos concretos". El contexto que construiste es un activo — no lo tires.</p>
+
+          <h2>Pedile que te haga preguntas primero</h2>
+          <p>Antes de responder algo complejo, pedile al modelo que pregunte lo que necesite saber:</p>
+
+          <div class="callout">
+            "Antes de ayudarme, hacé las preguntas que necesitás para entender bien el contexto. Cuando tengas todo claro, arrancamos."
+          </div>
+
+          <p>Esto elimina los supuestos que ni vos notaste que tenías. El modelo va a preguntar cosas que hubieran generado malentendidos si hubiera respondido directamente.</p>
+
+          <div class="exchange-block">
+            <span class="speaker">Vos</span>
+            "Quiero armar un dashboard para monitorear mi pipeline de datos. Antes de proponer algo, hacé las preguntas que necesitás."
+            <span class="speaker">Claude</span>
+            "¿Cuántos pipelines querés monitorear? ¿Qué tipo de fallos priorizás — latencia, errores, datos faltantes? ¿Tenés alguna herramienta de visualización preferida?"
+          </div>
+
+          <p>Tres preguntas que cambian completamente la respuesta.</p>
+
+          <h2>Técnica pro: planificar antes de ejecutar</h2>
+          <p>Para tareas importantes, este es el flujo que más me sirve:</p>
+          <ul>
+            <li>Prompt largo con todo el contexto: objetivo, restricciones, qué ya intentaste</li>
+            <li>"¿Tenés alguna duda sobre el contexto o el objetivo antes de arrancar?"</li>
+            <li>"¿Qué enfoques posibles ves? Dame 2 o 3 opciones con pros y contras"</li>
+            <li>Resolver dudas, elegir el enfoque</li>
+            <li><strong>Opcional pero muy potente:</strong> pedirle que genere el prompt definitivo para ejecutar la tarea en un chat limpio — sin el ruido de toda la conversación de planificación</li>
+          </ul>
+
+          <p>Ese último paso puede parecer raro, pero funciona muy bien. El modelo condensa todo el contexto en un prompt optimizado que podés pegar en una sesión nueva y ejecutar sin distracciones.</p>
+
+          <div class="exchange-block">
+            <span class="speaker">Vos</span>
+            "Quiero armar un sistema de alertas para un pipeline que procesa datos de ventas. Corre en Airflow, los resultados van a una base MySQL. Tuve dos fallos este mes — uno por timeout de red, otro por mismatch de esquema. Quiero poder detectar ambos. Antes de proponer algo, hacé las preguntas que necesitás."
+            <span class="speaker">Claude</span>
+            "¿Las alertas van por mail, Slack, o los dos? ¿Querés distinguir entre fallos críticos y warnings? ¿Tenés ya algún sistema de monitoreo donde pueda apoyarme?"
+            <span class="speaker">Vos</span>
+            "[respuestas]"
+            <span class="speaker">Claude</span>
+            "Con eso en mente, puedo enfocarlo de dos maneras: [Opción A: callbacks livianos directamente en las tasks de Airflow] vs [Opción B: monitoreo centralizado con on_failure_callback + servicio de notificaciones]. Los tradeoffs son..."
+          </div>
+
+          <h2>Bonus: los modelos de razonamiento y el cómputo</h2>
+          <p>Los modelos de razonamiento — o1 y o3 de OpenAI, Claude con extended thinking habilitado, DeepSeek R1, Gemini Thinking — tienen un paso interno de "pensar" antes de responder. No es marketing: el modelo genera razonamiento intermedio que influye en la calidad de la respuesta final, aunque no siempre lo veas.</p>
+          <p>Un prompt que deja clara la complejidad del problema puede llevar al modelo a invertir más de ese razonamiento interno. Importante aclarar: esto aplica específicamente a estos modelos. En modelos estándar como GPT-4o o Claude sin extended thinking, el efecto es mucho más limitado.</p>
+
+          <h2>Caso práctico completo</h2>
+          <p>Pedido base: <em>ayudame a estructurar un análisis del impacto de una nueva feature en retención de usuarios.</em></p>
+
+          <div class="version-block v1">
+            <span class="version-label">Versión 1 — Prompt malo</span>
+            <p><code>"Como analizo el impacto de una feature en retencion de usuarios?"</code></p>
+            <p>Resultado: una lista genérica de métricas que podría aplicar a cualquier producto en cualquier industria. Útil como punto de partida, inútil como respuesta a tu problema específico.</p>
+          </div>
+
+          <div class="version-block v2">
+            <span class="version-label">Versión 2 — Con técnicas básicas</span>
+            <p><code>"Sos un analista de producto senior. Tenemos una app B2C con 50k usuarios activos y acabamos de lanzar una feature de onboarding guiado. Necesito estructurar un análisis del impacto en retención a 30 días. Dame una estructura de análisis con las métricas clave a medir y cómo interpretarlas. Formato: secciones con subtítulos."</code></p>
+            <p>Resultado: un análisis concreto con hipótesis, métricas de control, segmentación sugerida y criterios de éxito. Se puede usar directamente.</p>
+          </div>
+
+          <div class="version-block v3">
+            <span class="version-label">Versión 3 — Con planificación previa</span>
+            <p>[Mismo contexto] + <code>"Antes de proponer una estructura, hacé las preguntas que necesitás. Después dame 2 enfoques posibles con pros y contras."</code></p>
+            <p>Claude pregunta: "¿Tenés un grupo control? ¿El lanzamiento fue gradual o a todos los usuarios simultáneamente? ¿Cuál es tu definición de retención a 30 días?" — y con esas respuestas genera dos enfoques (A/B testing vs análisis de cohortes), explicando cuándo usar cada uno.</p>
+            <p>La diferencia entre las tres versiones no es el modelo — es el contexto que le diste.</p>
+          </div>
+
+          <h2>Por dónde arrancar</h2>
+          <p>No hace falta cambiar todo de golpe. Con aplicar solo los dos primeros cambios — dar un rol y especificar el formato esperado — ya vas a notar la diferencia. El resto se va incorporando naturalmente a medida que usás el modelo más seguido.</p>
+          <p>¿Cuál de estos errores cometés más seguido?</p>
+        </div>
+      </div>
+
+      <div class="post-footer-nav">
+        <a href="../index.html#blog" data-i18n="back">← Back to Blog</a>
+        <a href="https://www.linkedin.com/in/tiago-garrel/" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Tiago Garrel · Built with care and caffeine.</p>
+    </div>
+  </footer>
+
+  <script>
+    'use strict';
+    const $ = s => document.querySelector(s);
+
+    // Theme
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+    function setTheme(t) {
+      currentTheme = t;
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('theme', t);
+      $('#themeLight').classList.toggle('active', t === 'light');
+      $('#themeDark').classList.toggle('active',  t === 'dark');
+    }
+    setTheme(currentTheme);
+    $('#themeToggle').addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+
+    // Language
+    let currentLang = localStorage.getItem('lang') || 'en';
+    function setLang(l) {
+      currentLang = l;
+      localStorage.setItem('lang', l);
+      document.documentElement.setAttribute('lang', l);
+      $('#langEN').classList.toggle('active', l === 'en');
+      $('#langES').classList.toggle('active', l === 'es');
+      $('#content-en').style.display = l === 'en' ? '' : 'none';
+      $('#content-es').style.display = l === 'es' ? '' : 'none';
+      document.querySelectorAll('[data-i18n="back"]').forEach(el => {
+        el.textContent = l === 'en' ? '← Back to Blog' : '← Volver al Blog';
+      });
+      document.title = l === 'en'
+        ? 'Why Your Prompts Are Bad (And How to Fix Them) — Tiago Garrel'
+        : 'Por qué tus prompts son malos (y cómo arreglarlos) — Tiago Garrel';
+      document.querySelector('meta[name="description"]').setAttribute('content',
+        l === 'en'
+          ? 'LLMs don\'t think — they predict. If your prompt is vague, the answer will be average. Here are the most common mistakes and how to fix them with concrete techniques.'
+          : 'Los LLMs no piensan: predicen. Si tu prompt es vago, la respuesta va a ser promedio. Los errores más comunes y cómo arreglarlos con técnicas concretas.'
+      );
+    }
+    setLang(currentLang);
+    $('#langToggle').addEventListener('click', () => setLang(currentLang === 'en' ? 'es' : 'en'));
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      $('#navbar').classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

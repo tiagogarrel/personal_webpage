@@ -77,6 +77,13 @@ const translations = {
       read_more: 'Read post →',
       items: [
         {
+          title: 'Why Your Prompts Are Bad (And How to Fix Them)',
+          date: 'June 2026',
+          tags: ['AI', 'Productivity', 'Prompts'],
+          summary: "LLMs don't think — they predict. If your prompt is vague, the answer will be average. The most common mistakes, concrete before/after examples, and the techniques that actually make a difference.",
+          url: 'blog/better-prompts.html',
+        },
+        {
           title: 'How I Use Claude to Study. Consistently.',
           date: 'May 2026',
           tags: ['AI', 'Learning', 'Claude'],
@@ -174,6 +181,13 @@ const translations = {
       subtitle: 'Reflexiones sobre tech, datos y otras cosas.',
       read_more: 'Leer post →',
       items: [
+        {
+          title: 'Por qué tus prompts son malos (y cómo arreglarlos)',
+          date: 'Junio 2026',
+          tags: ['IA', 'Productividad', 'Prompts'],
+          summary: 'Los LLMs no piensan: predicen. Si tu prompt es vago, la respuesta va a ser promedio. Los errores más comunes con ejemplos antes/después, y las técnicas que más diferencia hacen.',
+          url: 'blog/better-prompts.html',
+        },
         {
           title: 'Cómo uso Claude para aprender de forma consistente',
           date: 'Mayo 2026',
