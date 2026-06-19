@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="How we built an ML model to predict Bicing station occupancy across Barcelona — Random Forest, LightGBM, 16M rows, and what the data actually says about how the city moves." />
+  <title>Predicting When Your Bicing Station Will Be Full — Tiago Garrel</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%238b5cf6'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Inter,system-ui,sans-serif' font-weight='800' font-size='13' fill='white'>TG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .post-container { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+    .post-wrapper   { padding: 120px 0 96px; }
+
+    .post-back {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+      transition: color var(--transition); margin-bottom: 2.8rem;
+    }
+    .post-back:hover { color: var(--accent); }
+    .post-back svg  { transition: transform var(--transition); }
+    .post-back:hover svg { transform: translateX(-3px); }
+
+    .post-meta     { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .post-date     { font-size: 0.82rem; color: var(--text-muted); }
+    .post-dot      { color: var(--border); }
+    .post-read     { font-size: 0.82rem; color: var(--text-muted); }
+
+    .post-title {
+      font-size: clamp(1.75rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 2.4rem;
+    }
+
+    .post-divider { border: none; border-top: 1px solid var(--border-sub); margin: 2.8rem 0; }
+
+    .post-body { color: var(--text-muted); line-height: 1.85; font-size: 1.02rem; }
+    .post-body p  { margin-bottom: 1.4rem; }
+    .post-body h2 {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; margin: 2.8rem 0 1rem;
+    }
+    .post-body h2::before { content: '—  '; color: var(--accent); font-weight: 800; }
+    .post-body strong { color: var(--text); font-weight: 700; }
+    .post-body ul { list-style: none; margin: 1rem 0 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .post-body ul li { padding-left: 1.4rem; position: relative; }
+    .post-body ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.78rem; top: 0.18em; }
+    .post-body code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.88em;
+      background: var(--accent-subtle); color: var(--accent);
+      padding: 0.15em 0.45em; border-radius: 5px; border: 1px solid var(--border);
+    }
+    .post-body table { width: 100%; border-collapse: collapse; margin: 1.4rem 0; font-size: 0.92rem; }
+    .post-body th { text-align: left; padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); border-bottom: 1px solid var(--border); }
+    .post-body td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border-sub); color: var(--text-muted); }
+    .post-body tr:last-child td { border-bottom: none; }
+    .post-body tr:hover td { background: var(--accent-subtle); }
+
+    .report-block {
+      margin: 2.4rem 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--accent-subtle);
+    }
+    .report-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .report-block-title {
+      font-size: 0.88rem; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .report-block-title svg { color: var(--accent); flex-shrink: 0; }
+    .report-download {
+      font-size: 0.82rem; font-weight: 600; color: var(--accent);
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      transition: color var(--transition);
+    }
+    .report-download:hover { color: var(--accent-light); }
+    .report-embed {
+      width: 100%; height: 520px; border: none; display: block;
+    }
+    @media (max-width: 640px) {
+      .report-embed { height: 360px; }
+    }
+
+    .post-footer-nav {
+      margin-top: 4rem; padding-top: 2rem;
+      border-top: 1px solid var(--border-sub);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .post-footer-nav a {
+      font-size: 0.88rem; font-weight: 600; color: var(--accent);
+      transition: color var(--transition);
+    }
+    .post-footer-nav a:hover { color: var(--accent-light); }
+
+    .nav-links { display: none; }
+    @media (max-width: 640px) {
+      .post-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo">TG<span class="logo-dot">.</span></a>
+      <div class="nav-controls">
+        <button class="seg-toggle" id="langToggle" aria-label="Toggle language">
+          <span class="seg-opt active" id="langEN">EN</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt" id="langES">ES</span>
+        </button>
+        <button class="seg-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="seg-opt" id="themeLight">☀</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt active" id="themeDark">☾</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="post-wrapper">
+    <div class="post-container">
+
+      <a href="../index.html#blog" class="post-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        <span data-i18n="back">Back to Blog</span>
+      </a>
+
+      <!-- EN CONTENT -->
+      <div id="content-en">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Data Science</span>
+            <span class="tag">Python</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">June 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">9 min read</span>
+        </div>
+
+        <h1 class="post-title">Predicting When Your Bicing Station Will Be Full</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>If you've ever arrived at a Bicing station with no docks to return your bike, or left for work to find your nearest station completely empty, you already understand the problem we set out to solve.</p>
+          <p>Bicing is Barcelona's public bike-sharing system — a subscription-based network of over 500 stations spread across the city. The idea is great, the infrastructure is solid, but the availability is unpredictable. Beach stations flood with bikes on summer mornings. Transit hub stations run dry during rush hour. And you usually only find out when it's too late.</p>
+          <p>My classmates María Inés and Natalia and I experienced this firsthand as daily Bicing users. So when our Data Science course at EAE Business School asked us to pick a project, the choice was easy: build a model that predicts station occupancy before you leave the house.</p>
+
+          <h2>What We Were Actually Trying to Predict</h2>
+          <p>The target variable is the <strong>occupancy fraction</strong> of a station at a future point in time — a number between 0 (completely empty) and 1 (completely full). Not just "will it be available?" but "how occupied will it be?".</p>
+          <p>One of the design decisions we made early on was to build a single model that supports multiple prediction horizons — 1, 3, 6, 12, and 24 hours into the future — rather than training a separate model for each. We achieved this by including <code>horizon_hours</code> as an explicit feature. The model learns how uncertainty grows as the horizon extends, without any architectural change.</p>
+
+          <h2>The Data</h2>
+          <p>Barcelona's Open Data BCN portal publishes the real-time status of every Bicing station roughly every 5 minutes. We downloaded all twelve monthly snapshots for 2024 — that's a lot of data. After aggregating to hourly means and joining with weather data from the Open-Meteo API and the station metadata (coordinates, dock capacity), we ended up with <strong>over 20 million rows</strong> covering 510 stations across the full year.</p>
+          <p>November and December were held out entirely as the test set, simulating a real deployment scenario where the model is trained on historical data and needs to generalize to unseen future months.</p>
+
+          <h2>Feature Engineering</h2>
+          <p>This is where most of the predictive signal comes from. A few decisions that made a meaningful difference:</p>
+          <ul>
+            <li><strong>Cyclic time encoding.</strong> Hour, day of week, and month were encoded as sin/cos pairs instead of raw integers. Without this, the model would treat 23:00 and 00:00 as maximally distant — when they're actually adjacent. The same logic applies to Monday and Sunday.</li>
+            <li><strong>Occupancy lags.</strong> <code>current_occ</code>, <code>lag_24h</code>, <code>lag_168h</code> (same time last week), and several short-range lags (1h, 2h, 3h) provided the temporal memory the model needs. The 168-hour lag is particularly useful for capturing weekly patterns.</li>
+            <li><strong>Historical baseline.</strong> For each (station, hour, day-of-week) combination, we computed the long-run average occupancy on training data only — then joined it to the full dataset. This gives the model an anchor for what's "normal" at a given time and place, without leaking test information.</li>
+            <li><strong>Distance features.</strong> Distance to Barceloneta beach and to Plaça Catalunya (city center) encoded location continuously without requiring the model to memorize 510 individual station IDs.</li>
+            <li><strong>Weather.</strong> Temperature, precipitation, and wind speed from Open-Meteo. Weather effects are real but secondary — the data shows that temporal patterns dominate, and weather mostly amplifies them.</li>
+          </ul>
+
+          <h2>The Models</h2>
+          <p>We followed a progression from simple to complex: Linear Regression as a baseline, then Random Forest, then LightGBM.</p>
+          <p>Linear Regression gave us a floor — any model we kept had to clearly beat it. It did confirm that the features were well-constructed (reasonable coefficients, no obvious nonsense), but it can't capture the non-linear interactions between location, time, and occupancy.</p>
+          <p><strong>Random Forest</strong> was tuned with RandomizedSearchCV over TimeSeriesSplit cross-validation — 3 folds with a one-week gap between the end of each fold's training window and its validation window, to prevent autocorrelation bleed. Best parameters: <code>n_estimators=300, max_depth=16, max_features=0.5</code>.</p>
+          <p><strong>LightGBM</strong> was trained twice. V1 used the same hyperparameter search as Random Forest. V2 expanded the feature set (adding short-range lags and a neighbor-mean feature) and replaced RandomizedSearchCV with a two-phase Optuna search using a Tree-structured Parzen Estimator — 60 wide-range trials followed by 40 refined trials around the best region. This is a more principled approach than random search, and it showed.</p>
+
+          <h2>Results</h2>
+          <p>All models were evaluated on the November–December test set (3.6 million rows). Here's how they compared against two naive baselines — a persistence baseline (predicting current occupancy as the future occupancy) and a historical-mean baseline:</p>
+
+          <table>
+            <thead>
+              <tr><th>Model</th><th>RMSE</th><th>MAE</th><th>R²</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Persistence baseline</td><td>0.235</td><td>0.173</td><td>0.288</td></tr>
+              <tr><td>Historical-mean baseline</td><td>0.212</td><td>0.159</td><td>0.424</td></tr>
+              <tr><td>Linear Regression</td><td>0.181</td><td>0.136</td><td>0.548</td></tr>
+              <tr><td>Random Forest</td><td>0.167</td><td>0.124</td><td>0.623</td></tr>
+              <tr><td>LightGBM V1</td><td>0.163</td><td>0.124</td><td>0.657</td></tr>
+              <tr><td><strong>LightGBM V2</strong></td><td><strong>0.160</strong></td><td><strong>0.121</strong></td><td><strong>0.669</strong></td></tr>
+            </tbody>
+          </table>
+
+          <p>LightGBM V2 reduces RMSE by 31% relative to the persistence baseline. In practical terms, the average prediction error across all stations and horizons is about ±4.3 bikes — compared to ±6.3 bikes if you just assumed the station's current state would hold.</p>
+          <p>One interesting pattern: 24-hour RMSE is slightly lower than 12-hour RMSE across all models. It sounds counterintuitive, but it makes sense — at T+24h the model is essentially predicting the same time tomorrow, which looks a lot like today and has strong weekly patterns. At T+12h, the signal is fuzzier.</p>
+          <p>The hardest stations to predict are the ones within 500 meters of Barceloneta beach. High seasonal variance, tourist traffic, and atypical weekend patterns make them genuinely difficult — and this is reflected in their RMSE, which is consistently higher than the city average.</p>
+
+          <h2>What the Model Is Actually Learning</h2>
+          <p>We ran SHAP analysis on LightGBM to understand which features drive predictions. The top contributors were <code>current_occ</code>, <code>hist_mean_occ</code>, and the lag features — which makes intuitive sense. For short horizons, the current state of the station is simply the best predictor of its near future. As horizon grows, the historical baseline takes over.</p>
+          <p>The SHAP waterfall plots for individual predictions are particularly readable: starting from the dataset mean (0.37 occupancy), each feature pushes the estimate up or down. A high current occupancy and a short horizon push it up; a long horizon and low historical average push it down.</p>
+
+          <h2>Full Report</h2>
+          <p>Below is the complete project report, which covers every section in more detail — data pipeline, feature engineering decisions, hyperparameter search logs, error analysis by horizon and geography, and the proposed production architecture.</p>
+
+          <div class="report-block">
+            <div class="report-block-header">
+              <span class="report-block-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Bicing Occupancy Prediction — Full Report (EAE Business School, 2026)
+              </span>
+              <a href="../assets/DS_Bicing_ Occupancy Prediction Report.pdf" download class="report-download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download PDF
+              </a>
+            </div>
+            <iframe
+              class="report-embed"
+              src="../assets/DS_Bicing_ Occupancy Prediction Report.pdf"
+              title="Bicing Occupancy Prediction Report"
+            ></iframe>
+          </div>
+
+          <p>The code for the full pipeline — data extraction, feature engineering, model training, and evaluation — is available on GitHub.</p>
+          <p>If this project connects to something you're working on or you have thoughts on the modeling approach, feel free to reach out on <a href="https://www.linkedin.com/in/tiago-garrel/" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">LinkedIn</a>.</p>
+        </div>
+      </div>
+
+      <!-- ES CONTENT -->
+      <div id="content-es" style="display:none;">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Data Science</span>
+            <span class="tag">Python</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">Junio 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">9 min de lectura</span>
+        </div>
+
+        <h1 class="post-title">Predecir cuándo tu estación de Bicing va a estar llena</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>Si alguna vez llegaste a una estación de Bicing y no había dónde dejar la bici, o saliste de casa a buscarla y estaba vacía, ya entendés el problema que quisimos resolver.</p>
+          <p>Bicing es el sistema de bicicletas compartidas de Barcelona — una red de más de 500 estaciones distribuidas por toda la ciudad con suscripción anual. La idea es genial, la infraestructura funciona, pero la disponibilidad es impredecible. Las estaciones de la playa se llenan de bicis en las mañanas de verano. Las estaciones cerca de las paradas de metro quedan vacías en hora pico. Y normalmente te enterás cuando ya es tarde.</p>
+          <p>Mis compañeras María Inés y Natalia y yo vivíamos esto a diario como usuarios de Bicing. Así que cuando la materia de Data Science del master en EAE Business School nos pidió elegir un proyecto, la decisión fue fácil: construir un modelo que prediga la ocupación de una estación antes de salir de casa.</p>
+
+          <h2>Qué queríamos predecir</h2>
+          <p>La variable objetivo es la <strong>fracción de ocupación</strong> de una estación en un momento futuro — un número entre 0 (completamente vacía) y 1 (completamente llena). No simplemente "¿va a haber bici?", sino "¿qué tan ocupada va a estar?".</p>
+          <p>Una decisión de diseño clave fue construir un único modelo que soporte múltiples horizontes de predicción — 1, 3, 6, 12 y 24 horas — en lugar de entrenar un modelo por horizonte. Lo logramos incluyendo <code>horizon_hours</code> como feature explícita. El modelo aprende cómo crece la incertidumbre a medida que el horizonte aumenta, sin ningún cambio arquitectónico.</p>
+
+          <h2>Los datos</h2>
+          <p>El portal Open Data BCN publica el estado en tiempo real de cada estación de Bicing aproximadamente cada 5 minutos. Descargamos los doce archivos mensuales de 2024. Después de agregar a medias horarias y cruzar con datos meteorológicos de la API Open-Meteo y los metadatos de cada estación (coordenadas, capacidad), terminamos con <strong>más de 20 millones de filas</strong> que cubren 510 estaciones a lo largo de todo el año.</p>
+          <p>Noviembre y diciembre se reservaron como conjunto de test, simulando un escenario real de despliegue donde el modelo se entrena con datos históricos y tiene que generalizar a meses futuros que nunca vio.</p>
+
+          <h2>Feature engineering</h2>
+          <p>Acá es donde viene la mayor parte de la señal predictiva. Algunas decisiones que marcaron la diferencia:</p>
+          <ul>
+            <li><strong>Codificación cíclica del tiempo.</strong> La hora, el día de la semana y el mes se codificaron como pares sin/cos en lugar de enteros crudos. Sin esto, el modelo trataría las 23:00 y las 00:00 como máximamente distantes — cuando en realidad son adyacentes. Lo mismo aplica al lunes y el domingo.</li>
+            <li><strong>Lags de ocupación.</strong> <code>current_occ</code>, <code>lag_24h</code>, <code>lag_168h</code> (misma hora la semana pasada) y varios lags de corto plazo (1h, 2h, 3h) le dan al modelo la memoria temporal que necesita. El lag de 168 horas es especialmente útil para capturar patrones semanales.</li>
+            <li><strong>Baseline histórico.</strong> Para cada combinación (estación, hora, día de semana), calculamos la ocupación media histórica usando solo datos de entrenamiento y luego la unimos al dataset completo. Le da al modelo un ancla de qué es "normal" en un momento y lugar dado, sin filtrar información del test.</li>
+            <li><strong>Features de distancia.</strong> Distancia a la playa de la Barceloneta y a Plaça Catalunya codifican la ubicación de forma continua, sin que el modelo tenga que memorizar los 510 IDs de estaciones.</li>
+            <li><strong>Clima.</strong> Temperatura, precipitación y viento de Open-Meteo. El clima tiene efecto, pero secundario — los patrones temporales dominan, y el clima principalmente los amplifica.</li>
+          </ul>
+
+          <h2>Los modelos</h2>
+          <p>Seguimos una progresión de simple a complejo: Regresión Lineal como baseline, después Random Forest, después LightGBM.</p>
+          <p>La Regresión Lineal nos dio el piso — cualquier modelo que fuéramos a usar tenía que superarla claramente. Confirmó que las features estaban bien construidas, pero no puede capturar las interacciones no lineales entre ubicación, tiempo y ocupación.</p>
+          <p><strong>Random Forest</strong> se afinó con RandomizedSearchCV sobre validación cruzada con TimeSeriesSplit — 3 folds con un gap de una semana entre el fin de entrenamiento de cada fold y su ventana de validación, para evitar el sangrado por autocorrelación. Mejores parámetros: <code>n_estimators=300, max_depth=16, max_features=0.5</code>.</p>
+          <p><strong>LightGBM</strong> se entrenó dos veces. V1 usó la misma búsqueda de hiperparámetros que Random Forest. V2 expandió el conjunto de features (agregando lags de corto plazo y un feature de media de estaciones vecinas) y reemplazó RandomizedSearchCV con una búsqueda Optuna en dos fases usando un estimador de Parzen estructurado en árbol — 60 pruebas de amplio rango seguidas de 40 pruebas refinadas alrededor de la mejor región. Es un enfoque más riguroso que la búsqueda aleatoria, y se notó.</p>
+
+          <h2>Resultados</h2>
+          <p>Todos los modelos se evaluaron en el conjunto de test de noviembre-diciembre (3,6 millones de filas). Así se compararon contra dos baselines naïve — un baseline de persistencia (predecir que la ocupación futura es igual a la actual) y un baseline de media histórica:</p>
+
+          <table>
+            <thead>
+              <tr><th>Modelo</th><th>RMSE</th><th>MAE</th><th>R²</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Baseline persistencia</td><td>0.235</td><td>0.173</td><td>0.288</td></tr>
+              <tr><td>Baseline media histórica</td><td>0.212</td><td>0.159</td><td>0.424</td></tr>
+              <tr><td>Regresión Lineal</td><td>0.181</td><td>0.136</td><td>0.548</td></tr>
+              <tr><td>Random Forest</td><td>0.167</td><td>0.124</td><td>0.623</td></tr>
+              <tr><td>LightGBM V1</td><td>0.163</td><td>0.124</td><td>0.657</td></tr>
+              <tr><td><strong>LightGBM V2</strong></td><td><strong>0.160</strong></td><td><strong>0.121</strong></td><td><strong>0.669</strong></td></tr>
+            </tbody>
+          </table>
+
+          <p>LightGBM V2 reduce el RMSE un 31% respecto al baseline de persistencia. En términos prácticos, el error de predicción promedio entre todas las estaciones y horizontes es de ±4,3 bicis — contra ±6,3 si simplemente asumiéramos que el estado actual de la estación se mantiene.</p>
+          <p>Un patrón interesante: el RMSE a 24 horas es ligeramente menor que a 12 horas en todos los modelos. Suena contraintuitivo, pero tiene sentido — a T+24h el modelo esencialmente predice la misma hora de mañana, que se parece mucho a hoy y tiene patrones semanales fuertes. A T+12h, la señal es más difusa.</p>
+          <p>Las estaciones más difíciles de predecir son las que están a menos de 500 metros de la Barceloneta. Alta varianza estacional, tráfico turístico y patrones atípicos de fin de semana las hacen genuinamente complicadas — y esto se refleja en su RMSE, que es consistentemente mayor que el promedio de la ciudad.</p>
+
+          <h2>Qué aprende el modelo</h2>
+          <p>Corrimos análisis SHAP sobre LightGBM para entender qué features impulsan las predicciones. Los contribuyentes principales fueron <code>current_occ</code>, <code>hist_mean_occ</code> y los lags — lo que tiene sentido intuitivo. Para horizontes cortos, el estado actual de la estación es simplemente el mejor predictor de su futuro inmediato. A medida que el horizonte crece, el baseline histórico cobra más peso.</p>
+          <p>Los waterfall plots de SHAP para predicciones individuales son especialmente claros: partiendo de la media del dataset (0,37 de ocupación), cada feature empuja la estimación hacia arriba o hacia abajo. Una ocupación actual alta y un horizonte corto la suben; un horizonte largo y un histórico bajo la bajan.</p>
+
+          <h2>Informe completo</h2>
+          <p>Abajo está el informe completo del proyecto, que cubre cada sección en más detalle — pipeline de datos, decisiones de feature engineering, logs de búsqueda de hiperparámetros, análisis de error por horizonte y geografía, y la arquitectura de producción propuesta.</p>
+
+          <div class="report-block">
+            <div class="report-block-header">
+              <span class="report-block-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Bicing Occupancy Prediction — Informe completo (EAE Business School, 2026)
+              </span>
+              <a href="../assets/DS_Bicing_ Occupancy Prediction Report.pdf" download class="report-download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar PDF
+              </a>
+            </div>
+            <iframe
+              class="report-embed"
+              src="../assets/DS_Bicing_ Occupancy Prediction Report.pdf"
+              title="Bicing Occupancy Prediction Report"
+            ></iframe>
+          </div>
+
+          <p>El código del pipeline completo — extracción de datos, feature engineering, entrenamiento y evaluación — está disponible en GitHub.</p>
+          <p>Si el proyecto conecta con algo en lo que estás trabajando o tenés comentarios sobre el enfoque de modelado, podés escribirme por <a href="https://www.linkedin.com/in/tiago-garrel/" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600;">LinkedIn</a>.</p>
+        </div>
+      </div>
+
+      <div class="post-footer-nav">
+        <a href="../index.html#blog" data-i18n="back">← Back to Blog</a>
+        <a href="https://www.linkedin.com/in/tiago-garrel/" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Tiago Garrel · Built with care and caffeine.</p>
+    </div>
+  </footer>
+
+  <script>
+    'use strict';
+    const $ = s => document.querySelector(s);
+
+    // Theme
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+    function setTheme(t) {
+      currentTheme = t;
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('theme', t);
+      $('#themeLight').classList.toggle('active', t === 'light');
+      $('#themeDark').classList.toggle('active',  t === 'dark');
+    }
+    setTheme(currentTheme);
+    $('#themeToggle').addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+
+    // Language
+    let currentLang = localStorage.getItem('lang') || 'en';
+    function setLang(l) {
+      currentLang = l;
+      localStorage.setItem('lang', l);
+      document.documentElement.setAttribute('lang', l);
+      $('#langEN').classList.toggle('active', l === 'en');
+      $('#langES').classList.toggle('active', l === 'es');
+      $('#content-en').style.display = l === 'en' ? '' : 'none';
+      $('#content-es').style.display = l === 'es' ? '' : 'none';
+      document.querySelectorAll('[data-i18n="back"]').forEach(el => {
+        el.textContent = l === 'en' ? '← Back to Blog' : '← Volver al Blog';
+      });
+      document.title = l === 'en'
+        ? 'Predicting When Your Bicing Station Will Be Full — Tiago Garrel'
+        : 'Predecir cuándo tu estación de Bicing va a estar llena — Tiago Garrel';
+    }
+    setLang(currentLang);
+    $('#langToggle').addEventListener('click', () => setLang(currentLang === 'en' ? 'es' : 'en'));
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      $('#navbar').classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

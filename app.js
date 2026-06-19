@@ -77,6 +77,13 @@ const translations = {
       read_more: 'Read post →',
       items: [
         {
+          title: 'Predicting When Your Bicing Station Will Be Full',
+          date: 'June 2026',
+          tags: ['Machine Learning', 'Data Science', 'Python'],
+          summary: 'How we built an ML model to predict Bicing station occupancy across Barcelona — Random Forest, LightGBM, 16M rows, and what the data actually says about how the city moves.',
+          url: 'blog/bicing.html',
+        },
+        {
           title: 'Why Your Prompts Are Bad (And How to Fix Them)',
           date: 'June 2026',
           tags: ['AI', 'Productivity', 'Prompts'],
@@ -181,6 +188,13 @@ const translations = {
       subtitle: 'Reflexiones sobre tech, datos y otras cosas.',
       read_more: 'Leer post →',
       items: [
+        {
+          title: 'Predecir cuándo tu estación de Bicing va a estar llena',
+          date: 'Junio 2026',
+          tags: ['Machine Learning', 'Data Science', 'Python'],
+          summary: 'Cómo construimos un modelo de ML para predecir la ocupación de las estaciones de Bicing en Barcelona — Random Forest, LightGBM, 16M de filas, y qué dicen los datos sobre cómo se mueve la ciudad.',
+          url: 'blog/bicing.html',
+        },
         {
           title: 'Por qué tus prompts son malos (y cómo arreglarlos)',
           date: 'Junio 2026',
