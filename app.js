@@ -8,14 +8,14 @@ const translations = {
     nav: { about:'About', experience:'Experience', projects:'Projects', skills:'Skills', blog:'Blog', contact:'Contact' },
     hero: {
       greeting: "Hi, I'm",
-      roles: ['Data Professional','Data Engineer','Analytics Enthusiast','Problem Solver'],
-      subtitle: 'Bridging operations and data engineering to build solutions that actually work in the real world.',
+      roles: ['AI Engineer','Data Engineer','ML Practitioner','Problem Solver'],
+      subtitle: 'Building AI systems and data pipelines grounded in real operational context.',
       cta_projects:'View Projects', cta_cv:'Download CV',
     },
     about: {
       section_title:'About Me',
-      bio1:"Data-driven professional with a background in production engineering, currently completing a Master's in Big Data & Analytics at EAE Business School, Barcelona. Experienced in designing data pipelines and analytics solutions that turn complex datasets into actionable insights — proficient in Python, SQL, and cloud-based tools.",
-      bio2:"My edge comes from combining hands-on operational experience with data engineering skills. I understand not just how to build data solutions, but how they need to perform in real-world production environments. That context makes all the difference.",
+      bio1:"AI & Data Engineer with a background in production engineering, currently completing a Master's in Big Data & Analytics at EAE Business School, Barcelona. I build agentic systems, LLM pipelines, and data infrastructure — with the operational context to know what actually needs solving.",
+      bio2:"My edge is combining deep experience in operations and supply chain with AI engineering skills. I don't just build models — I understand the real-world systems they need to fit into.",
       stat1_value:'3+', stat1_label:'Years of Experience',
       stat2_value:'4',  stat2_label:'Major Projects',
       stat3_value:'12+',stat3_label:'Technologies',
@@ -36,19 +36,21 @@ const translations = {
     projects: {
       section_title:'Projects', github_label:'View on GitHub',
       items:[
-        { title:'Daily Sales ETL Pipeline', description:'Modular ETL pipeline to process and load sales, weather, and zipcode data into a MySQL warehouse — with automated cleaning, enrichment, and idempotent loading.', tags:['Python','MySQL','ETL','Pandas'], github:'https://github.com/tiagogarrel' },
-        { title:'Call Center Performance Optimisation', description:'AI-powered conversational analytics system on AWS using LLMs to extract insights from call transcripts and improve metrics such as AHT and FCR.', tags:['Python','AWS','LLMs','NLP'], github:'https://github.com/tiagogarrel', badge:'In Development' },
-        { title:'Coffee Big Data Project', description:'End-to-end data pipeline: simulated sales data in PostgreSQL, interactive Power BI dashboards, and predictive models (Random Forest, LightGBM) orchestrated with Airflow.', tags:['Python','PostgreSQL','Power BI','Airflow','ML'], github:'https://github.com/tiagogarrel' },
-        { title:'Screen Time Tracker', description:'Streamlit application to track and analyse daily screen time with automated metrics and visualisations, using Google Sheets as a lightweight backend.', tags:['Python','Streamlit','Google Sheets'], github:'https://github.com/tiagogarrel' },
+        { title:'Conversational Analytics System', description:'End-to-end agentic analytics platform for an insurance call center — Medallion Architecture on AWS S3 with LLM enrichment, evaluator-retry quality control, FAISS semantic search, and a multi-agent RAG system (HyDE + MMR).', tags:['Python','AWS S3','LLMs','FAISS','FastAPI','Docker'], github:'https://github.com/tiagogarrel', badge:"Master's Thesis" },
+        { title:'Bicing Occupancy Prediction', description:"ML model predicting bicycle station availability across Barcelona's Bicing network. 16M+ rows with feature engineering on temporal and geospatial data.", tags:['Python','Random Forest','LightGBM','Pandas'], github:'https://github.com/tiagogarrel' },
+        { title:'Daily Sales ETL Pipeline', description:'Modular Python ETL processing sales, weather, and geolocation data into a MySQL warehouse — automated cleaning, enrichment, and idempotent loading.', tags:['Python','MySQL','ETL','Pandas'], github:'https://github.com/tiagogarrel' },
+        { title:'Coffee Big Data Project', description:'End-to-end data pipeline simulating coffee shop sales across Australian cities. PostgreSQL storage, Power BI dashboards, and ML forecasting (LightGBM + Random Forest) with Airflow orchestration.', tags:['Python','PostgreSQL','Power BI','Airflow','ML'], github:'https://github.com/tiagogarrel/Coffee-BigData' },
+        { title:'CV Tuning & Application Tracker', description:'AI-powered platform to tailor CVs for specific job postings and manage the full application pipeline — from draft to offer.', tags:['Python','LLMs','FastAPI','AI'], github:'https://github.com/tiagogarrel', badge:'In Development' },
+        { title:'AI & Technology Blog', description:'Technical blog and content platform covering AI systems, data engineering, and emerging technology — for both technical and non-technical audiences. 5+ published posts.', tags:['AI Diffusion','Content','GitHub Pages'], github:'https://tiagogarrel.github.io/personal_webpage/#blog' },
       ],
     },
     skills: {
       section_title:'Skills',
       categories:[
-        { name:'Languages & Tools',       items:['Python','SQL','Git','Docker','Linux'] },
-        { name:'Data & Analytics',        items:['BigQuery','Looker','Power BI','Pandas','NumPy','Matplotlib'] },
-        { name:'Engineering & Databases', items:['ETL/ELT Pipelines','Data Modelling','Airflow','SQLAlchemy','MySQL','PostgreSQL'] },
-        { name:'Cloud & ML',              items:['Google Cloud','AWS','Scikit-learn','LightGBM','Streamlit'] },
+        { name:'AI & LLM',            items:['LLMs','RAG (HyDE · MMR)','FAISS','OpenRouter','llama.cpp','Multi-agent Systems','FastAPI'] },
+        { name:'Data Engineering',    items:['ETL/ELT Pipelines','Apache Airflow','Data Modelling','SQLAlchemy','MySQL','PostgreSQL','Parquet'] },
+        { name:'Languages & Tools',   items:['Python','SQL','Docker','Git','Linux','Pandas','Pydantic'] },
+        { name:'Analytics & Cloud',   items:['BigQuery','Looker','Power BI','AWS','Scikit-learn','LightGBM','Streamlit'] },
       ],
     },
     education: {
@@ -113,21 +115,21 @@ const translations = {
         },
       ],
     },
-    contact: { section_title:'Get in Touch', subtitle:'Interested in working together or just want to talk data? Feel free to reach out.', email_label:'Email', linkedin_label:'LinkedIn', github_label:'GitHub' },
+    contact: { section_title:'Get in Touch', subtitle:'Interested in working together or just want to talk AI & data? Feel free to reach out.', email_label:'Email', linkedin_label:'LinkedIn', github_label:'GitHub' },
   },
 
   es: {
     nav: { about:'Sobre Mí', experience:'Experiencia', projects:'Proyectos', skills:'Habilidades', blog:'Blog', contact:'Contacto' },
     hero: {
       greeting:'Hola, soy',
-      roles:['Data Professional','Data Engineer','Analista de Datos','Problem Solver'],
-      subtitle:'Conectando operaciones e ingeniería de datos para construir soluciones que funcionan en el mundo real.',
+      roles:['AI Engineer','Data Engineer','ML Practitioner','Problem Solver'],
+      subtitle:'Construyendo sistemas de IA e infraestructura de datos con base en contexto operacional real.',
       cta_projects:'Ver Proyectos', cta_cv:'Descargar CV',
     },
     about: {
       section_title:'Sobre Mí',
-      bio1:"Profesional orientado a datos con background en ingeniería de producción, actualmente cursando un Máster en Big Data & Analytics en EAE Business School, Barcelona. Especializado en diseñar pipelines de datos y soluciones analíticas que convierten datasets complejos en insights accionables.",
-      bio2:"Mi diferencial viene de combinar experiencia operacional real con habilidades de ingeniería de datos. Entiendo no solo cómo construir soluciones de datos, sino cómo deben funcionar en entornos de producción reales. Ese contexto marca toda la diferencia.",
+      bio1:"AI & Data Engineer con background en ingeniería de producción, actualmente cursando un Máster en Big Data & Analytics en EAE Business School, Barcelona. Construyo sistemas agénticos, pipelines con LLMs e infraestructura de datos — con el contexto operacional para entender qué es lo que realmente hay que resolver.",
+      bio2:"Mi diferencial está en combinar experiencia real en operaciones y cadena de suministro con habilidades de ingeniería de IA. No solo construyo modelos — entiendo los sistemas reales en los que tienen que funcionar.",
       stat1_value:'3+', stat1_label:'Años de Experiencia',
       stat2_value:'4',  stat2_label:'Proyectos Principales',
       stat3_value:'12+',stat3_label:'Tecnologías',
@@ -148,19 +150,21 @@ const translations = {
     projects: {
       section_title:'Proyectos', github_label:'Ver en GitHub',
       items:[
-        { title:'Pipeline ETL de Ventas Diarias', description:'Pipeline ETL modular para procesar y cargar datos de ventas, clima y códigos postales en un warehouse MySQL, con limpieza automatizada, enriquecimiento y carga idempotente.', tags:['Python','MySQL','ETL','Pandas'], github:'https://github.com/tiagogarrel' },
-        { title:'Optimización de Call Center', description:'Sistema de analítica conversacional con IA en AWS usando LLMs para extraer insights de transcripciones de llamadas y mejorar métricas como AHT y FCR.', tags:['Python','AWS','LLMs','NLP'], github:'https://github.com/tiagogarrel', badge:'En Desarrollo' },
-        { title:'Proyecto Big Data de Café', description:'Pipeline de datos end-to-end: datos de ventas simulados en PostgreSQL, dashboards interactivos en Power BI y modelos predictivos (Random Forest, LightGBM) orquestados con Airflow.', tags:['Python','PostgreSQL','Power BI','Airflow','ML'], github:'https://github.com/tiagogarrel' },
-        { title:'Screen Time Tracker', description:'Aplicación en Streamlit para rastrear y analizar el tiempo de pantalla diario con métricas automatizadas y visualizaciones, usando Google Sheets como backend liviano.', tags:['Python','Streamlit','Google Sheets'], github:'https://github.com/tiagogarrel' },
+        { title:'Sistema de Analítica Conversacional', description:'Plataforma agéntica end-to-end para analítica de call center de seguros — Arquitectura Medallion en AWS S3 con enriquecimiento LLM, control de calidad evaluador-retry, búsqueda semántica con FAISS y sistema multi-agente con RAG (HyDE + MMR).', tags:['Python','AWS S3','LLMs','FAISS','FastAPI','Docker'], github:'https://github.com/tiagogarrel', badge:'Tesis de Máster' },
+        { title:'Predicción de Ocupación Bicing', description:'Modelo de ML para predecir la disponibilidad de estaciones de Bicing en Barcelona. Más de 16M de filas con feature engineering sobre datos temporales y geoespaciales.', tags:['Python','Random Forest','LightGBM','Pandas'], github:'https://github.com/tiagogarrel' },
+        { title:'Pipeline ETL de Ventas Diarias', description:'Pipeline ETL modular que procesa datos de ventas, clima y geolocalización en un warehouse MySQL — con limpieza automatizada, enriquecimiento y carga idempotente.', tags:['Python','MySQL','ETL','Pandas'], github:'https://github.com/tiagogarrel' },
+        { title:'Proyecto Big Data de Café', description:'Pipeline de datos end-to-end que simula ventas de cafeterías en ciudades australianas. Almacenamiento en PostgreSQL, dashboards en Power BI y forecasting con ML (LightGBM + Random Forest) orquestado con Airflow.', tags:['Python','PostgreSQL','Power BI','Airflow','ML'], github:'https://github.com/tiagogarrel/Coffee-BigData' },
+        { title:'Plataforma de CV y Seguimiento de Aplicaciones', description:'Plataforma con IA para personalizar CVs según ofertas específicas y gestionar todo el pipeline de aplicaciones — desde el borrador hasta la oferta.', tags:['Python','LLMs','FastAPI','IA'], github:'https://github.com/tiagogarrel', badge:'En Desarrollo' },
+        { title:'Blog de Tecnología e IA', description:'Blog técnico y plataforma de contenido sobre sistemas de IA, ingeniería de datos y tecnología emergente — para audiencias técnicas y no técnicas. Más de 5 posts publicados.', tags:['Divulgación','Contenido','GitHub Pages'], github:'https://tiagogarrel.github.io/personal_webpage/#blog' },
       ],
     },
     skills: {
       section_title:'Habilidades',
       categories:[
-        { name:'Lenguajes y Herramientas',    items:['Python','SQL','Git','Docker','Linux'] },
-        { name:'Datos y Analítica',           items:['BigQuery','Looker','Power BI','Pandas','NumPy','Matplotlib'] },
-        { name:'Ingeniería y Bases de Datos', items:['Pipelines ETL/ELT','Modelado de Datos','Airflow','SQLAlchemy','MySQL','PostgreSQL'] },
-        { name:'Cloud y ML',                  items:['Google Cloud','AWS','Scikit-learn','LightGBM','Streamlit'] },
+        { name:'IA y LLMs',                  items:['LLMs','RAG (HyDE · MMR)','FAISS','OpenRouter','llama.cpp','Sistemas Multi-agente','FastAPI'] },
+        { name:'Ingeniería de Datos',        items:['Pipelines ETL/ELT','Apache Airflow','Modelado de Datos','SQLAlchemy','MySQL','PostgreSQL','Parquet'] },
+        { name:'Lenguajes y Herramientas',   items:['Python','SQL','Docker','Git','Linux','Pandas','Pydantic'] },
+        { name:'Analítica y Cloud',          items:['BigQuery','Looker','Power BI','AWS','Scikit-learn','LightGBM','Streamlit'] },
       ],
     },
     education: {
@@ -225,7 +229,7 @@ const translations = {
         },
       ],
     },
-    contact: { section_title:'Contacto', subtitle:'¿Interesado en trabajar juntos o simplemente hablar de datos? No dudes en escribirme.', email_label:'Email', linkedin_label:'LinkedIn', github_label:'GitHub' },
+    contact: { section_title:'Contacto', subtitle:'¿Interesado en trabajar juntos o simplemente hablar de IA y datos? No dudes en escribirme.', email_label:'Email', linkedin_label:'LinkedIn', github_label:'GitHub' },
   },
 };
 
