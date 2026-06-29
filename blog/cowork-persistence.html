@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Claude Cowork is one of the first tools that shows what working with AI will actually look like. Here's what it is, how to use it, and how to make sure you don't lose your work." />
+  <title>Claude Cowork: The AI Environment That Looks Like the Future of Work — Tiago Garrel</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%238b5cf6'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Inter,system-ui,sans-serif' font-weight='800' font-size='13' fill='white'>TG</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .post-container { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+    .post-wrapper   { padding: 120px 0 96px; }
+
+    .post-back {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+      transition: color var(--transition); margin-bottom: 2.8rem;
+    }
+    .post-back:hover { color: var(--accent); }
+    .post-back svg  { transition: transform var(--transition); }
+    .post-back:hover svg { transform: translateX(-3px); }
+
+    .post-meta     { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .post-date     { font-size: 0.82rem; color: var(--text-muted); }
+    .post-dot      { color: var(--border); }
+    .post-read     { font-size: 0.82rem; color: var(--text-muted); }
+
+    .post-title {
+      font-size: clamp(1.75rem, 4vw, 2.6rem); font-weight: 800;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 2.4rem;
+    }
+
+    .post-divider { border: none; border-top: 1px solid var(--border-sub); margin: 2.8rem 0; }
+
+    .post-body { color: var(--text-muted); line-height: 1.85; font-size: 1.02rem; }
+    .post-body p  { margin-bottom: 1.4rem; }
+    .post-body h2 {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; margin: 2.8rem 0 1rem;
+    }
+    .post-body h2::before { content: '—  '; color: var(--accent); font-weight: 800; }
+    .post-body h3 {
+      font-size: 1.05rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.01em; margin: 2rem 0 0.7rem;
+    }
+    .post-body strong { color: var(--text); font-weight: 700; }
+    .post-body ul { list-style: none; margin: 1rem 0 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .post-body ul li { padding-left: 1.4rem; position: relative; }
+    .post-body ul li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 0.78rem; top: 0.18em; }
+    .post-body a { color: var(--accent); text-decoration: none; }
+    .post-body a:hover { text-decoration: underline; }
+    .post-body code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.88em;
+      background: var(--accent-subtle); color: var(--accent);
+      padding: 0.15em 0.45em; border-radius: 5px; border: 1px solid var(--border);
+    }
+    .post-body pre {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.4rem 1.6rem; overflow-x: auto;
+      margin: 0.6rem 0 1.6rem; line-height: 1.65;
+    }
+    .post-body pre code {
+      background: none; border: none; padding: 0;
+      font-size: 0.84rem; color: var(--text-muted);
+    }
+    .post-body .code-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      font-weight: 600; color: var(--accent); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 0.4rem; display: block;
+    }
+    .post-body .loop-diagram {
+      background: var(--accent-subtle); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.2rem 1.6rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.84rem;
+      color: var(--text-muted); line-height: 1.9; margin: 1.2rem 0 1.8rem;
+    }
+    .post-body .warn-box {
+      background: rgba(234, 179, 8, 0.07); border: 1px solid rgba(234, 179, 8, 0.28);
+      border-radius: 10px; padding: 1rem 1.4rem;
+      font-size: 0.94rem; color: var(--text-muted); line-height: 1.75;
+      margin: 0.2rem 0 1.8rem;
+    }
+    .post-body .warn-box strong { color: #ca8a04; font-weight: 700; }
+
+    .post-footer-nav {
+      margin-top: 4rem; padding-top: 2rem;
+      border-top: 1px solid var(--border-sub);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .post-footer-nav a {
+      font-size: 0.88rem; font-weight: 600; color: var(--accent);
+      transition: color var(--transition);
+    }
+    .post-footer-nav a:hover { color: var(--accent-light); }
+
+    .nav-links { display: none; }
+    @media (max-width: 640px) {
+      .post-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-logo">TG<span class="logo-dot">.</span></a>
+      <div class="nav-controls">
+        <button class="seg-toggle" id="langToggle" aria-label="Toggle language">
+          <span class="seg-opt active" id="langEN">EN</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt" id="langES">ES</span>
+        </button>
+        <button class="seg-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="seg-opt" id="themeLight">☀</span>
+          <span class="seg-sep">|</span>
+          <span class="seg-opt active" id="themeDark">☾</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="post-wrapper">
+    <div class="post-container">
+
+      <a href="../index.html#blog" class="post-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        <span data-i18n="back">Back to Blog</span>
+      </a>
+
+      <!-- ═══════════════════════════════════════════════ EN CONTENT -->
+      <div id="content-en">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">AI</span>
+            <span class="tag">Tools</span>
+            <span class="tag">Claude</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">June 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">8 min read</span>
+        </div>
+
+        <h1 class="post-title">Claude Cowork: The AI Environment That Looks Like the Future of Work</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>Most people still use AI the way they used to use Google — type something, get an answer, and iterate. That's useful, genuinely. But it's only the surface of what's becoming possible.</p>
+          <p>There's a more fundamental shift happening underneath: from AI as a chat interface to AI as a working environment. One that has access to your files, remembers your context across sessions, understands how you work, and can take real actions on your behalf. Claude Cowork is one of the clearest examples of what that looks like today — and a decent preview of where this is heading.</p>
+
+          <h2>What Is Claude Cowork?</h2>
+          <p>Claude Cowork is a feature of Claude Desktop — the application you install directly on your computer, available for both Windows and Mac. It's different from the browser version of Claude. The key difference is <strong>projects</strong>.</p>
+          <p>In Cowork, you create a project and configure it: you connect a folder from your computer and write a set of permanent instructions — who you are, how you want it to respond, what your goals are. Every chat you open inside that project starts with that full context already loaded. You don't re-explain yourself every time.</p>
+          <p>Beyond context, a project can use tools: search the web, read and edit files in the connected folder, run code, generate Word documents, spreadsheets, PDFs, and more. It's not just a smarter chat window — it's a configured assistant with access to your actual work.</p>
+
+          <h2>What It Can Actually Do</h2>
+          <p>The best way to understand it is through a concrete example. I have a personal brand project set up in Cowork. In the instructions, I've described who I am, what my tone is, what I work on, and what the project is for: writing blog posts, drafting LinkedIn content, keeping my CV updated, writing cover letters for job applications.</p>
+          <p>Every chat inside that project starts with that context already loaded. I don't introduce myself. I don't explain my writing style. I can say "write a post about my latest ML project" and it already knows my background, my audience, my tone.</p>
+          <p>On top of that, it has access to the folder where my website files live. It can read my existing blog posts, write new ones in the same HTML format, and save them directly where they need to go. It's not generating text for me to copy and paste — it's doing the work end to end.</p>
+          <p>The same logic applies to almost any repeating knowledge work: research, writing, analysis, documentation, data tasks. Configure it once, and it works with real context every time you open it.</p>
+
+          <h2>Why Start Now Even If You're Not Technical</h2>
+          <p>I want to be clear about this: you don't need to be technical to use Cowork. Setting up a project takes about 20 minutes. The configuration is mostly writing — describing who you are, what you do, and what you want the project to help you with.</p>
+          <p>What you do need is a willingness to experiment. The value doesn't come from understanding every feature upfront — it comes from using it and discovering through practice what it can and can't do for your specific work. That takes time. The earlier you start, the more of an advantage you build.</p>
+          <p>The way I see it: AI is moving from a tool you occasionally query to an environment you actually work inside. That shift is going to matter for almost every knowledge work role in the near future — not because AI will replace the work, but because people who understand how these environments work will work very differently from those who don't.</p>
+          <p>It's not a question of being technical. It's a question of being willing to practice before it becomes obvious that you should have.</p>
+
+          <h2>The Downside: You Can Lose Everything on Reinstall</h2>
+          <p>Cowork stores all your project data locally — instructions, conversation history, tool configurations. That's mostly a feature: fast, private, on your machine. But it has one significant downside that isn't obvious until it hits you.</p>
+          <p>If you reinstall Claude Desktop — to fix an issue, update, or change your setup — you lose everything. Project instructions, chat history, all of it. Clean slate.</p>
+          <p>To avoid this, there are two complementary things you should set up from the start.</p>
+
+          <h2>How to Protect Your Work</h2>
+
+          <h3>Keep your working folder in a location with automatic cloud backup</h3>
+          <p>The folder you connect to a Cowork project should live somewhere that syncs automatically with the cloud — OneDrive, Google Drive, iCloud, or any equivalent. The folder stays on your computer (Claude accesses it locally), but the sync runs quietly in the background and keeps a copy safe. If anything happens to your installation, your files are already backed up.</p>
+          <p>This covers your work files and the project content in that folder. It doesn't cover your conversation history — that's stored separately, inside Claude's own application data.</p>
+
+          <h3>Back up Claude's application data before reinstalling</h3>
+          <p>Claude's project data — including all conversation history — lives in a specific folder on Windows: <code>%APPDATA%\Claude</code>. If you back that folder up before uninstalling and restore it before opening Claude after reinstalling, everything comes back intact.</p>
+          <p>The critical detail: restore the backup <strong>before opening Claude for the first time</strong> after reinstalling. If Claude launches first, it creates fresh config files and the restore may cause conflicts.</p>
+          <p>Here's the full process for Windows:</p>
+
+          <h3>Step 1 — Back up your data (before touching anything)</h3>
+          <span class="code-label">PowerShell</span>
+          <pre><code>robocopy "%APPDATA%\Claude" "%USERPROFILE%\Desktop\Claude_backup_completo" /E /256 /R:0 /W:0</code></pre>
+
+          <h3>Step 2 — Uninstall Claude (PowerShell as administrator)</h3>
+          <span class="code-label">PowerShell — run as administrator</span>
+          <pre><code>Get-AppxPackage -Name "*Claude*" | Remove-AppxPackage -ErrorAction SilentlyContinue
+Get-AppxPackage -AllUsers -Name "*Claude*" | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue</code></pre>
+
+          <h3>Step 3 — Clean up stuck old versions in WindowsApps</h3>
+          <p>First, check what's there:</p>
+          <span class="code-label">PowerShell</span>
+          <pre><code>dir "C:\Program Files\WindowsApps" | Where-Object {$_.Name -like "*Claude*"}</code></pre>
+          <p>For each folder that appears, run the following (replace <code>FOLDER_NAME</code> with the actual folder name):</p>
+          <span class="code-label">PowerShell — run for each folder found</span>
+          <pre><code>takeown /f "C:\Program Files\WindowsApps\FOLDER_NAME" /r /d y
+icacls "C:\Program Files\WindowsApps\FOLDER_NAME" /grant administrators:F /t
+Remove-Item "C:\Program Files\WindowsApps\FOLDER_NAME" -Recurse -Force</code></pre>
+
+          <h3>Step 4 — Restart Windows</h3>
+          <p>A full restart — not shutdown and power on, an actual restart.</p>
+
+          <h3>Step 5 — Reinstall Claude</h3>
+          <p>Download from <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a> and install normally.</p>
+
+          <h3>Step 6 — Restore your data (before opening Claude)</h3>
+          <span class="code-label">PowerShell</span>
+          <pre><code>robocopy "%USERPROFILE%\Desktop\Claude_backup_completo" "%APPDATA%\Claude" /E /256 /R:0 /W:0</code></pre>
+          <div class="warn-box">
+            <strong>⚠ Important:</strong> Run this before opening Claude for the first time. If Claude launches first, it creates fresh config files and the restore may cause conflicts.
+          </div>
+
+          <h3>Step 7 — Open Claude and verify your projects are there</h3>
+          <p>If everything went correctly, your projects, instructions, and conversation history will be right where you left them.</p>
+
+          <h2>Start Before It's Obvious</h2>
+          <p>The tools that matter most are always the ones people don't take seriously at first. Cowork isn't perfect — it's still in preview, still evolving, and it has rough edges. But it's one of the clearest examples available right now of what AI-assisted work actually looks like when you move past the chat interface.</p>
+          <p>Set up a project. Spend an hour with it. See what happens when you give an AI real context and real access to your work. That's not a prediction about the future — it's something you can do today.</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ ES CONTENT -->
+      <div id="content-es" style="display:none;">
+        <div class="post-meta">
+          <div class="blog-tags">
+            <span class="tag">IA</span>
+            <span class="tag">Herramientas</span>
+            <span class="tag">Claude</span>
+          </div>
+          <span class="post-dot">·</span>
+          <span class="post-date">Junio 2026</span>
+          <span class="post-dot">·</span>
+          <span class="post-read">8 min de lectura</span>
+        </div>
+
+        <h1 class="post-title">Claude Cowork: el entorno de IA que se parece a cómo vamos a trabajar</h1>
+        <hr class="post-divider" />
+
+        <div class="post-body">
+          <p>La mayoría de la gente todavía usa la IA como usaba Google — escribís algo, obtenés una respuesta, y así ir iterando. Eso es útil, genuinamente. Pero es solo la superficie de lo que está empezando a ser posible.</p>
+          <p>Hay un cambio más profundo que está ocurriendo por debajo: pasar de la IA como interfaz de chat a la IA como entorno de trabajo. Un entorno que tiene acceso a tus archivos, recuerda tu contexto entre sesiones, entiende cómo trabajás, y puede tomar acciones reales por vos. Claude Cowork es uno de los ejemplos más claros de cómo se ve eso hoy — y un buen anticipo de hacia dónde va todo esto.</p>
+
+          <h2>Qué es Claude Cowork</h2>
+          <p>Claude Cowork es una funcionalidad de Claude Desktop — la aplicación que instalás directamente en tu computadora, disponible para Windows y Mac. Es diferente a la versión de Claude en el navegador. La diferencia clave está en los <strong>proyectos</strong>.</p>
+          <p>En Cowork creás un proyecto y lo configurás: conectás una carpeta de tu computadora y escribís un conjunto de instrucciones permanentes — quién sos, cómo querés que responda, cuáles son tus objetivos. Cada chat que abrís dentro de ese proyecto arranca con todo ese contexto ya cargado. No te tenés que presentar de vuelta cada vez.</p>
+          <p>Más allá del contexto, un proyecto puede usar herramientas: buscar en la web, leer y editar archivos de la carpeta conectada, ejecutar código, generar documentos Word, planillas de cálculo, PDFs. No es solo una ventana de chat más inteligente — es un asistente configurado con acceso a tu trabajo real.</p>
+
+          <h2>Qué puede hacer concretamente</h2>
+          <p>La mejor forma de entenderlo es con un ejemplo concreto. Yo tengo un proyecto de marca personal configurado en Cowork. En las instrucciones describí quién soy, cuál es mi tono, en qué trabajo, y para qué sirve el proyecto: escribir blogs, redactar posts de LinkedIn, mantener actualizado mi CV, escribir cover letters para aplicaciones de trabajo.</p>
+          <p>Cada chat dentro de ese proyecto arranca con ese contexto ya cargado. No me presento. No explico mi estilo de escritura. Puedo decir "escribí un post sobre mi último proyecto de ML" y ya sabe mi background, mi audiencia, mi tono.</p>
+          <p>Además, tiene acceso a la carpeta donde viven los archivos de mi página web. Puede leer mis blogs existentes, escribir nuevos en el mismo formato HTML, y guardarlos directamente donde tienen que ir. No me genera texto para copiar y pegar — hace el trabajo de punta a punta.</p>
+          <p>La misma lógica aplica a casi cualquier trabajo de conocimiento que se repita: investigación, escritura, análisis, documentación, tareas de datos. Configurás una vez y trabaja con contexto real cada vez que lo abrís.</p>
+
+          <h2>Por qué empezar ahora aunque no seas técnico</h2>
+          <p>Quiero ser claro en esto: no necesitás ser técnico para usar Cowork. Configurar un proyecto lleva alrededor de 20 minutos. La configuración es básicamente escribir — describir quién sos, qué hacés, y en qué querés que te ayude el proyecto.</p>
+          <p>Lo que sí necesitás es disposición a experimentar. El valor no viene de entender cada funcionalidad de antemano — viene de usarlo y descubrir a través de la práctica qué puede y no puede hacer en tu contexto específico. Eso lleva tiempo. Cuanto antes empezás, más ventaja construís.</p>
+          <p>Como lo veo yo: la IA está pasando de ser una herramienta que consultás ocasionalmente a un entorno en el que realmente trabajás. Ese cambio va a importar para casi cualquier rol de trabajo del conocimiento en el futuro cercano — no porque la IA vaya a reemplazar el trabajo, sino porque las personas que entiendan cómo funcionan estos entornos van a trabajar de forma muy distinta a las que no.</p>
+          <p>No es cuestión de ser técnico. Es cuestión de estar dispuesto a practicar antes de que sea obvio que deberías haberlo hecho.</p>
+
+          <h2>El lado B: podés perderlo todo si reinstalás</h2>
+          <p>Cowork guarda todos los datos de tu proyecto de forma local — instrucciones, historial de conversaciones, configuraciones de herramientas. Eso en su mayor parte es bueno: rápido, privado, en tu máquina. Pero tiene un downside importante que no es obvio hasta que te pasa.</p>
+          <p>Si reinstalás Claude Desktop — para solucionar un problema, actualizar, o cambiar de entorno — perdés todo. Instrucciones del proyecto, historial de chats, todo. Pantalla en blanco.</p>
+          <p>Para evitarlo, hay dos cosas complementarias que conviene tener configuradas desde el principio.</p>
+
+          <h2>Cómo proteger tu trabajo</h2>
+
+          <h3>Tener la carpeta de trabajo en un lugar con backup automático en la nube</h3>
+          <p>La carpeta que conectás a un proyecto de Cowork debería vivir en un lugar que se sincronice automáticamente con la nube — OneDrive, Google Drive, iCloud, o cualquier equivalente. La carpeta está en tu computadora (Claude la accede localmente), pero la sincronización corre en el fondo y mantiene una copia segura. Si algo le pasa a tu instalación, tus archivos ya están respaldados.</p>
+          <p>Esto cubre tus archivos de trabajo y el contenido del proyecto en esa carpeta. No cubre el historial de conversaciones — ese se guarda por separado, dentro de los datos propios de Claude.</p>
+
+          <h3>Hacer backup de los datos de Claude antes de reinstalar</h3>
+          <p>Los datos de Claude — incluyendo todo el historial de conversaciones — viven en una carpeta específica en Windows: <code>%APPDATA%\Claude</code>. Si hacés backup de esa carpeta antes de desinstalar y la restaurás antes de abrir Claude después de reinstalar, todo vuelve tal cual lo dejaste.</p>
+          <p>El detalle crítico: restaurá el backup <strong>antes de abrir Claude por primera vez</strong> después de reinstalar. Si Claude arranca primero, crea archivos de configuración nuevos y la restauración puede generar conflictos.</p>
+          <p>Acá está el proceso completo para Windows:</p>
+
+          <h3>Paso 1 — Backup de datos (antes de tocar nada)</h3>
+          <span class="code-label">PowerShell</span>
+          <pre><code>robocopy "%APPDATA%\Claude" "%USERPROFILE%\Desktop\Claude_backup_completo" /E /256 /R:0 /W:0</code></pre>
+
+          <h3>Paso 2 — Desinstalar Claude (PowerShell como administrador)</h3>
+          <span class="code-label">PowerShell — ejecutar como administrador</span>
+          <pre><code>Get-AppxPackage -Name "*Claude*" | Remove-AppxPackage -ErrorAction SilentlyContinue
+Get-AppxPackage -AllUsers -Name "*Claude*" | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue</code></pre>
+
+          <h3>Paso 3 — Limpiar versiones antiguas atascadas en WindowsApps</h3>
+          <p>Primero ver qué hay:</p>
+          <span class="code-label">PowerShell</span>
+          <pre><code>dir "C:\Program Files\WindowsApps" | Where-Object {$_.Name -like "*Claude*"}</code></pre>
+          <p>Por cada carpeta que aparezca, ejecutar lo siguiente (reemplazando <code>NOMBRE_CARPETA</code> con el nombre real):</p>
+          <span class="code-label">PowerShell — ejecutar por cada carpeta encontrada</span>
+          <pre><code>takeown /f "C:\Program Files\WindowsApps\NOMBRE_CARPETA" /r /d y
+icacls "C:\Program Files\WindowsApps\NOMBRE_CARPETA" /grant administrators:F /t
+Remove-Item "C:\Program Files\WindowsApps\NOMBRE_CARPETA" -Recurse -Force</code></pre>
+
+          <h3>Paso 4 — Reiniciar Windows</h3>
+          <p>Reinicio completo — no apagar y encender, un reinicio de verdad.</p>
+
+          <h3>Paso 5 — Reinstalar Claude</h3>
+          <p>Descargarlo desde <a href="https://claude.com/download" target="_blank" rel="noopener">claude.com/download</a> e instalar normalmente.</p>
+
+          <h3>Paso 6 — Restaurar datos (antes de abrir Claude)</h3>
+          <span class="code-label">PowerShell</span>
+          <pre><code>robocopy "%USERPROFILE%\Desktop\Claude_backup_completo" "%APPDATA%\Claude" /E /256 /R:0 /W:0</code></pre>
+          <div class="warn-box">
+            <strong>⚠ Importante:</strong> Ejecutar esto antes de abrir Claude por primera vez. Si Claude arranca primero, crea archivos de configuración nuevos y la restauración puede generar conflictos.
+          </div>
+
+          <h3>Paso 7 — Abrir Claude y verificar que los proyectos están</h3>
+          <p>Si todo salió bien, los proyectos, instrucciones e historial de conversaciones van a estar exactamente donde los dejaste.</p>
+
+          <h2>Empezá antes de que sea obvio</h2>
+          <p>Las herramientas que más importan siempre son las que la gente no toma en serio al principio. Cowork no es perfecto — todavía está en preview, sigue evolucionando, tiene partes sin pulir. Pero es uno de los ejemplos más claros disponibles hoy de cómo se ve el trabajo asistido por IA cuando salís de la interfaz de chat.</p>
+          <p>Armá un proyecto. Pasale una hora. Mirá qué pasa cuando le das a una IA contexto real y acceso real a tu trabajo. Eso no es una predicción sobre el futuro — es algo que podés hacer hoy.</p>
+        </div>
+      </div>
+
+      <div class="post-footer-nav">
+        <a href="../index.html#blog" data-i18n="back">← Back to Blog</a>
+        <a href="https://www.linkedin.com/in/tiago-garrel/" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Tiago Garrel · Built with care and caffeine.</p>
+    </div>
+  </footer>
+
+  <script>
+    'use strict';
+    const $ = s => document.querySelector(s);
+
+    // Theme
+    let currentTheme = localStorage.getItem('theme') || 'dark';
+    function setTheme(t) {
+      currentTheme = t;
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('theme', t);
+      $('#themeLight').classList.toggle('active', t === 'light');
+      $('#themeDark').classList.toggle('active',  t === 'dark');
+    }
+    setTheme(currentTheme);
+    $('#themeToggle').addEventListener('click', () => setTheme(currentTheme === 'dark' ? 'light' : 'dark'));
+
+    // Language
+    let currentLang = localStorage.getItem('lang') || 'en';
+    function setLang(l) {
+      currentLang = l;
+      localStorage.setItem('lang', l);
+      document.documentElement.setAttribute('lang', l);
+      $('#langEN').classList.toggle('active', l === 'en');
+      $('#langES').classList.toggle('active', l === 'es');
+      $('#content-en').style.display = l === 'en' ? '' : 'none';
+      $('#content-es').style.display = l === 'es' ? '' : 'none';
+      document.querySelectorAll('[data-i18n="back"]').forEach(el => {
+        el.textContent = l === 'en' ? '← Back to Blog' : '← Volver al Blog';
+      });
+      document.title = l === 'en'
+        ? 'Claude Cowork: The AI Environment That Looks Like the Future of Work — Tiago Garrel'
+        : 'Claude Cowork: el entorno de IA que se parece a cómo vamos a trabajar — Tiago Garrel';
+    }
+    setLang(currentLang);
+    $('#langToggle').addEventListener('click', () => setLang(currentLang === 'en' ? 'es' : 'en'));
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      $('#navbar').classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

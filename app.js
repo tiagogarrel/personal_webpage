@@ -79,6 +79,13 @@ const translations = {
       read_more: 'Read post →',
       items: [
         {
+          title: 'Claude Cowork: The AI Environment That Looks Like the Future of Work',
+          date: 'June 2026',
+          tags: ['AI', 'Tools', 'Claude'],
+          summary: "Most people still use AI like a fancy search engine. Claude Cowork is one of the first tools that shows what working with AI will actually look like — persistent projects, real file access, connected tools. Here's what it is, why you should start now, and how to make sure you don't lose your work.",
+          url: 'blog/cowork-persistence.html',
+        },
+        {
           title: 'Predicting When Your Bicing Station Will Be Full',
           date: 'June 2026',
           tags: ['Machine Learning', 'Data Science', 'Python'],
@@ -192,6 +199,13 @@ const translations = {
       subtitle: 'Reflexiones sobre tech, datos y otras cosas.',
       read_more: 'Leer post →',
       items: [
+        {
+          title: 'Claude Cowork: el entorno de IA que se parece a cómo vamos a trabajar',
+          date: 'Junio 2026',
+          tags: ['IA', 'Herramientas', 'Claude'],
+          summary: 'La mayoría todavía usa la IA como un buscador glorificado. Claude Cowork es uno de los primeros ejemplos de cómo se ve trabajar con IA de verdad — proyectos persistentes, acceso real a tus archivos, herramientas conectadas. Qué es, por qué empezar ahora, y cómo no perder tu trabajo.',
+          url: 'blog/cowork-persistence.html',
+        },
         {
           title: 'Predecir cuándo tu estación de Bicing va a estar llena',
           date: 'Junio 2026',
