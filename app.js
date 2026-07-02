@@ -23,25 +23,29 @@ const translations = {
     experience: {
       section_title:'Experience',
       items:[
+        { title:'Independent Consultant', company:'Natural Cosmetics Brand', location:'Remote', period:'Mar 2026 – Present',
+          bullets:["Designing and building end-to-end operational infrastructure from scratch — database architecture, stock management logic, automated production systems, and cross-system integrations.","Already reducing more than 1 hour of manual operations work per day, with a full impact evaluation pending."] },
         { title:'Competition Insights Analyst', company:'eDreams ODIGEO', location:'Barcelona, Spain', period:'Nov 2025 – Feb 2026',
-          bullets:["Performed competitive and market analysis for multiple business teams using Google's data ecosystem (BigQuery, Looker, Google Sheets).","Designed and developed Python-based operational tools that automated workflows and increased team efficiency.","Collaborated with cross-functional stakeholders to interpret data and propose improvements aligned with strategic objectives."] },
+          bullets:["Built Python and Google Apps Script tools that automated recurring analytical workflows, saving 15–20 minutes of manual work daily.","Developed a system to detect and track anomalies, cutting detection time from 2.5 weeks to 2 days on average.","Collaborated with cross-functional stakeholders to interpret data and propose improvements aligned with strategic objectives."] },
         { title:'Data & Operations Analyst', company:'Ártico', location:'Canelones, Uruguay', period:'Nov 2022 – Jun 2024',
-          bullets:['Directed the company-wide implementation of a Transportation Management System (TMS), coordinating cross-departmental efforts.','Developed Python algorithms for automated analysis and optimisation of warehouse slotting for 1,000+ SKUs.','Analysed supply-chain operations and designed tools to manage complex networks of suppliers, warehouses, and clients.','Created Power BI dashboards that streamlined decision-making and enhanced operational visibility across teams.'] },
+          bullets:["Led a company-wide TMS software rollout as project manager, taking over a project delayed by 2 months and coordinating over 20 people across departments to deliver on time.","Developed algorithms and management tools for automated warehouse slotting optimisation across 1,500+ SKUs, improving operations by over 20% and significantly reducing warehouse movements.","Analysed supply-chain operations and designed tools to manage complex networks of suppliers, warehouses, and clients.","Created Power BI dashboards that streamlined decision-making and enhanced operational visibility across teams."] },
         { title:'Supervisor', company:'Mayohogar', location:'Montevideo, Uruguay', period:'Feb 2022 – Oct 2022',
-          bullets:['Managed and supervised personnel, boosting team productivity and operational efficiency.','Streamlined warehouse operations, optimising space utilisation and inventory management.'] },
-        { title:'Co-founder', company:'UnMonton Board Games', location:'Uruguay', period:'2019 – 2021',
-          bullets:['Co-developed and launched a board-game brand, handling game design, prototyping, production, and marketing.','Managed the end-to-end product lifecycle from industrial printing to sales and customer engagement.','Sustained the business for two years through effective community building and digital marketing.'] },
+          bullets:["Managed a team of 3 and day-to-day operations, improving month-over-month revenue by 70% over 6 months.","Streamlined warehouse operations, optimising space utilisation and inventory management."] },
+        { title:'Co-founder', company:'UnMonton Board Games', location:'Uruguay', period:'2020 – 2021',
+          bullets:["Co-developed and launched a board-game brand, handling game design, prototyping, production, and marketing.","Managed the end-to-end product lifecycle from industrial printing to sales and customer engagement.","Sustained the business for a year through effective community building and digital marketing, selling over 200 games nationwide."] },
       ],
     },
     projects: {
-      section_title:'Projects', github_label:'View on GitHub',
+      section_title:'Projects', github_label:'View on GitHub', demo_label:'Live Demo', paper_label:'View Publication',
       items:[
         { title:'Conversational Analytics System', description:'End-to-end agentic analytics platform for an insurance call center — Medallion Architecture on AWS S3 with LLM enrichment, evaluator-retry quality control, FAISS semantic search, and a multi-agent RAG system (HyDE + MMR).', tags:['Python','AWS S3','LLMs','FAISS','FastAPI','Docker'], github:'https://github.com/tiagogarrel', badge:"Master's Thesis" },
         { title:'Bicing Occupancy Prediction', description:"ML model predicting bicycle station availability across Barcelona's Bicing network. 16M+ rows with feature engineering on temporal and geospatial data.", tags:['Python','Random Forest','LightGBM','Pandas'], github:'https://github.com/tiagogarrel' },
+        { title:'BicingCheck', description:"Community web app to scan and rate individual Bicing bikes across Barcelona, helping riders spot which ones are actually in good shape before grabbing one.", tags:['Next.js','Vercel','Web App'], demo:'https://bicing-check.vercel.app/', badge:'Live' },
         { title:'Daily Sales ETL Pipeline', description:'Modular Python ETL processing sales, weather, and geolocation data into a MySQL warehouse — automated cleaning, enrichment, and idempotent loading.', tags:['Python','MySQL','ETL','Pandas'], github:'https://github.com/tiagogarrel' },
         { title:'Coffee Big Data Project', description:'End-to-end data pipeline simulating coffee shop sales across Australian cities. PostgreSQL storage, Power BI dashboards, and ML forecasting (LightGBM + Random Forest) with Airflow orchestration.', tags:['Python','PostgreSQL','Power BI','Airflow','ML'], github:'https://github.com/tiagogarrel/Coffee-BigData' },
         { title:'CV Tuning & Application Tracker', description:'AI-powered platform to tailor CVs for specific job postings and manage the full application pipeline — from draft to offer.', tags:['Python','LLMs','FastAPI','AI'], github:'https://github.com/tiagogarrel', badge:'In Development' },
         { title:'AI & Technology Blog', description:'Technical blog and content platform covering AI systems, data engineering, and emerging technology — for both technical and non-technical audiences. 5+ published posts.', tags:['AI Diffusion','Content','GitHub Pages'], github:'https://tiagogarrel.github.io/personal_webpage/#blog' },
+        { title:"Bachelor's Thesis: Route Optimisation", description:'Mathematical model to minimise distribution costs for frozen goods under complex constraints — outperformed commercial software, awarded a 100% grade, and presented at the XXII South American Conference of Industrial, Production & Mechanical Engineering.', tags:['Optimisation','Operations Research','Supply Chain'], paper:'https://www.colibri.udelar.edu.uy/jspui/handle/20.500.12008/43835', badge:"Bachelor's Thesis" },
       ],
     },
     skills: {
@@ -56,7 +60,7 @@ const translations = {
     education: {
       section_title:'Education',
       items:[
-        { degree:"Master's in Big Data & Analytics", school:'EAE Business School', location:'Barcelona, Spain', period:'Oct 2025 – Jul 2026', badge:'In Progress', note:null },
+        { degree:"Master's in Big Data & Analytics", school:'EAE Business School', location:'Barcelona, Spain', period:'Oct 2025 – Jul 2026', badge:'In Progress', note:'Thesis: Conversational Analytics System — an end-to-end agentic analytics platform for an insurance call centre. Medallion Architecture on AWS S3 with LLM enrichment, evaluator-retry quality control, FAISS semantic search, and a multi-agent RAG system (HyDE + MMR). Stack: Python, Gemma 3 (llama.cpp/GGUF), OpenRouter, FAISS, FastAPI, AWS S3, Docker Compose.' },
         { degree:"Bachelor's in Production Engineering", school:'Universidad de la República', location:'Montevideo, Uruguay', period:'2019 – 2023', badge:null, note:'Thesis: Optimisation of Routes in Frozen Goods Distribution — Mathematical model achieving results superior to commercial software. Grade: 100% · Presented at the XXII South American Conference of Industrial, Production and Mechanical Engineering.' },
       ],
     },
@@ -144,25 +148,29 @@ const translations = {
     experience: {
       section_title:'Experiencia',
       items:[
+        { title:'Consultor Independiente', company:'Marca de Cosmética Natural', location:'Remoto', period:'Mar 2026 – Presente',
+          bullets:['Diseño y construcción de infraestructura operacional end-to-end desde cero: arquitectura de base de datos, lógica de gestión de stock, sistemas de producción automatizados e integraciones entre sistemas.','Ya reduciendo más de 1 hora diaria de trabajo manual en operaciones, con evaluación de impacto completa pendiente.'] },
         { title:'Analista de Inteligencia Competitiva', company:'eDreams ODIGEO', location:'Barcelona, España', period:'Nov 2025 – Feb 2026',
-          bullets:['Realicé análisis competitivos y de mercado para múltiples equipos de negocio usando el ecosistema de datos de Google (BigQuery, Looker, Google Sheets).','Diseñé y desarrollé herramientas operacionales en Python que automatizaron flujos de trabajo y aumentaron la eficiencia.','Colaboré con equipos multidisciplinarios para interpretar datos y proponer mejoras alineadas con objetivos estratégicos.'] },
+          bullets:['Construí herramientas en Python y Google Apps Script que automatizaron flujos de trabajo analíticos recurrentes, ahorrando 15 a 20 minutos de trabajo manual por día.','Desarrollé un sistema para detectar y monitorear anomalías, reduciendo el tiempo de detección de 2,5 semanas a 2 días en promedio.','Colaboré con equipos multidisciplinarios para interpretar datos y proponer mejoras alineadas con objetivos estratégicos.'] },
         { title:'Analista de Datos y Operaciones', company:'Ártico', location:'Canelones, Uruguay', period:'Nov 2022 – Jun 2024',
-          bullets:['Dirigí la implementación corporativa de un Sistema de Gestión de Transporte (TMS), coordinando esfuerzos entre departamentos.','Desarrollé algoritmos en Python para análisis automatizado y optimización del slotting de almacén para más de 1.000 SKUs.','Analicé operaciones de cadena de suministro y diseñé herramientas para gestionar redes complejas de proveedores, almacenes y clientes.','Creé dashboards en Power BI que agilizaron la toma de decisiones y mejoraron la visibilidad operacional.'] },
+          bullets:['Dirigí la implementación corporativa de un TMS como project manager, asumiendo un proyecto con 2 meses de atraso y coordinando a más de 20 personas entre departamentos para entregarlo a tiempo.','Desarrollé algoritmos y herramientas de gestión para la optimización automatizada del slotting de almacén en más de 1.500 SKUs, mejorando las operaciones en más de un 20% y reduciendo considerablemente los movimientos de almacén.','Analicé operaciones de cadena de suministro y diseñé herramientas para gestionar redes complejas de proveedores, almacenes y clientes.','Creé dashboards en Power BI que agilizaron la toma de decisiones y mejoraron la visibilidad operacional.'] },
         { title:'Supervisor', company:'Mayohogar', location:'Montevideo, Uruguay', period:'Feb 2022 – Oct 2022',
-          bullets:['Gestioné y supervisé personal, mejorando la productividad del equipo y la eficiencia operacional.','Optimicé operaciones de almacén, mejorando la utilización del espacio y los procesos de gestión de inventarios.'] },
-        { title:'Co-fundador', company:'UnMonton Board Games', location:'Uruguay', period:'2019 – 2021',
-          bullets:['Co-desarrollé y lancé una marca de juegos de mesa, gestionando diseño, prototipado, producción y marketing.','Manejé el ciclo de vida completo del producto, desde la impresión industrial hasta las ventas y la comunidad.','Sostuve el negocio durante dos años mediante construcción de comunidad y marketing digital efectivo.'] },
+          bullets:['Gestioné un equipo de 3 personas y las operaciones diarias, mejorando los ingresos mes a mes en un 70% en 6 meses.','Optimicé operaciones de almacén, mejorando la utilización del espacio y los procesos de gestión de inventarios.'] },
+        { title:'Co-fundador', company:'UnMonton Board Games', location:'Uruguay', period:'2020 – 2021',
+          bullets:['Co-desarrollé y lancé una marca de juegos de mesa, gestionando diseño, prototipado, producción y marketing.','Manejé el ciclo de vida completo del producto, desde la impresión industrial hasta las ventas y la comunidad.','Sostuve el negocio durante un año mediante construcción de comunidad y marketing digital efectivo, vendiendo más de 200 juegos a nivel nacional.'] },
       ],
     },
     projects: {
-      section_title:'Proyectos', github_label:'Ver en GitHub',
+      section_title:'Proyectos', github_label:'Ver en GitHub', demo_label:'Ver en Vivo', paper_label:'Ver Publicación',
       items:[
         { title:'Sistema de Analítica Conversacional', description:'Plataforma agéntica end-to-end para analítica de call center de seguros — Arquitectura Medallion en AWS S3 con enriquecimiento LLM, control de calidad evaluador-retry, búsqueda semántica con FAISS y sistema multi-agente con RAG (HyDE + MMR).', tags:['Python','AWS S3','LLMs','FAISS','FastAPI','Docker'], github:'https://github.com/tiagogarrel', badge:'Tesis de Máster' },
         { title:'Predicción de Ocupación Bicing', description:'Modelo de ML para predecir la disponibilidad de estaciones de Bicing en Barcelona. Más de 16M de filas con feature engineering sobre datos temporales y geoespaciales.', tags:['Python','Random Forest','LightGBM','Pandas'], github:'https://github.com/tiagogarrel' },
+        { title:'BicingCheck', description:'App comunitaria para escanear y valorar bicis individuales de Bicing en Barcelona, ayudando a detectar cuáles están realmente en buen estado antes de agarrarla.', tags:['Next.js','Vercel','Web App'], demo:'https://bicing-check.vercel.app/', badge:'Activo' },
         { title:'Pipeline ETL de Ventas Diarias', description:'Pipeline ETL modular que procesa datos de ventas, clima y geolocalización en un warehouse MySQL — con limpieza automatizada, enriquecimiento y carga idempotente.', tags:['Python','MySQL','ETL','Pandas'], github:'https://github.com/tiagogarrel' },
         { title:'Proyecto Big Data de Café', description:'Pipeline de datos end-to-end que simula ventas de cafeterías en ciudades australianas. Almacenamiento en PostgreSQL, dashboards en Power BI y forecasting con ML (LightGBM + Random Forest) orquestado con Airflow.', tags:['Python','PostgreSQL','Power BI','Airflow','ML'], github:'https://github.com/tiagogarrel/Coffee-BigData' },
         { title:'Plataforma de CV y Seguimiento de Aplicaciones', description:'Plataforma con IA para personalizar CVs según ofertas específicas y gestionar todo el pipeline de aplicaciones — desde el borrador hasta la oferta.', tags:['Python','LLMs','FastAPI','IA'], github:'https://github.com/tiagogarrel', badge:'En Desarrollo' },
         { title:'Blog de Tecnología e IA', description:'Blog técnico y plataforma de contenido sobre sistemas de IA, ingeniería de datos y tecnología emergente — para audiencias técnicas y no técnicas. Más de 5 posts publicados.', tags:['Divulgación','Contenido','GitHub Pages'], github:'https://tiagogarrel.github.io/personal_webpage/#blog' },
+        { title:'Tesis de Grado: Optimización de Rutas', description:'Modelo matemático para minimizar costos de distribución de productos congelados bajo restricciones complejas — superó al software comercial, obtuvo una nota de 100% y fue presentado en la XXII Conferencia Sudamericana de Ingeniería Industrial, de Producción y Mecánica.', tags:['Optimización','Investigación Operativa','Supply Chain'], paper:'https://www.colibri.udelar.edu.uy/jspui/handle/20.500.12008/43835', badge:'Tesis de Grado' },
       ],
     },
     skills: {
@@ -177,7 +185,7 @@ const translations = {
     education: {
       section_title:'Educación',
       items:[
-        { degree:'Máster en Big Data & Analytics', school:'EAE Business School', location:'Barcelona, España', period:'Oct 2025 – Jul 2026', badge:'En Curso', note:null },
+        { degree:'Máster en Big Data & Analytics', school:'EAE Business School', location:'Barcelona, España', period:'Oct 2025 – Jul 2026', badge:'En Curso', note:'Tesis: Sistema de Analítica Conversacional — plataforma agéntica end-to-end para analítica de call center de seguros. Arquitectura Medallion en AWS S3 con enriquecimiento LLM, control de calidad evaluador-retry, búsqueda semántica FAISS y sistema multi-agente con RAG (HyDE + MMR). Stack: Python, Gemma 3 (llama.cpp/GGUF), OpenRouter, FAISS, FastAPI, AWS S3, Docker Compose.' },
         { degree:'Ingeniería de Producción', school:'Universidad de la República', location:'Montevideo, Uruguay', period:'2019 – 2023', badge:null, note:'Tesis: Optimización de Rutas en Distribución de Bienes Congelados — Modelo matemático con resultados superiores al software comercial. Nota: 100% · Presentada en la XXII Conferencia Sudamericana de Ingeniería Industrial, de Producción y Mecánica.' },
       ],
     },
@@ -322,13 +330,20 @@ function renderExperience(exp) {
 function renderProjects(proj) {
   const c = $('#projectsGrid'); if (!c) return;
   const gh = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`;
-  c.innerHTML = proj.items.map((p,i) => `
+  const ext = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+  c.innerHTML = proj.items.map((p,i) => {
+    const links = [];
+    if (p.github) links.push(`<a href="${p.github}" target="_blank" rel="noopener" class="project-link">${gh} ${proj.github_label} →</a>`);
+    if (p.demo)   links.push(`<a href="${p.demo}" target="_blank" rel="noopener" class="project-link">${ext} ${proj.demo_label} →</a>`);
+    if (p.paper)  links.push(`<a href="${p.paper}" target="_blank" rel="noopener" class="project-link">${ext} ${proj.paper_label} →</a>`);
+    return `
     <div class="project-card" style="transition-delay:${i*.1}s">
       <div class="project-header"><span class="project-title">${p.title}</span>${p.badge?`<span class="project-badge">${p.badge}</span>`:''}</div>
       <p class="project-description">${p.description}</p>
       <div class="project-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-      <a href="${p.github}" target="_blank" rel="noopener" class="project-link">${gh} ${proj.github_label} →</a>
-    </div>`).join('');
+      <div class="project-links">${links.join('')}</div>
+    </div>`;
+  }).join('');
   observeNew('.project-card');
 }
 

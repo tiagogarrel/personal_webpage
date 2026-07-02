@@ -299,7 +299,8 @@ ul { list-style: none; }
   font-family: 'JetBrains Mono', monospace; transition: background var(--transition), color var(--transition); cursor: default;
 }
 .tag:hover { background: var(--accent); color: #fff; }
-.project-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.83rem; color: var(--text-muted); font-weight: 500; transition: color var(--transition); margin-top: 0.2rem; }
+.project-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.2rem; }
+.project-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.83rem; color: var(--text-muted); font-weight: 500; transition: color var(--transition); }
 .project-link:hover { color: var(--accent); }
 
 /* ============================================================
